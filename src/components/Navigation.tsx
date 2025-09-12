@@ -36,111 +36,129 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-sketch-gray/30 shadow-soft">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b-2 border-zinc-900 dark:border-white shadow-[4px_4px_0px_0px] shadow-zinc-900 dark:shadow-white">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Creative Logo */}
           <div 
-            className="flex items-center gap-3 cursor-pointer group" 
+            className="flex items-center gap-3 cursor-pointer group relative" 
             onClick={() => handleNavigation("home")}
           >
-            <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-crayon">
-              <Palette className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-amber-400 border-2 border-zinc-900 dark:border-white rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform duration-300 shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white">
+              <Palette className="w-6 h-6 text-zinc-900" />
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-foreground">Farhana</h2>
-              <p className="text-xs text-muted-foreground">Art Studio</p>
+            <div className="relative">
+              <h2 className="text-xl font-bold font-handwritten text-zinc-900 dark:text-white rotate-[-1deg]">Farhana</h2>
+              <p className="text-xs font-handwritten text-zinc-600 dark:text-zinc-400 rotate-[1deg]">Art Studio ✨</p>
+              {/* Decorative underline */}
+              <div className="absolute -bottom-1 left-0 w-16 h-1 bg-amber-400/50 rotate-[-1deg] rounded-full" />
             </div>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-1">
-            {menuItems.map((item) => {
+          <div className="hidden md:flex items-center gap-2">
+            {menuItems.map((item, index) => {
               const Icon = item.icon;
               const isActive = activeSection === item.id;
+              const rotations = ['rotate-[-1deg]', 'rotate-[1deg]', 'rotate-[-0.5deg]'];
+              const rotation = rotations[index % rotations.length];
               
               return (
-                <Button
-                  key={item.id}
-                  variant={isActive ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => handleNavigation(item.id)}
-                  className={`
-                    transition-all duration-300 relative rounded-xl
-                    ${isActive 
-                      ? "bg-gradient-primary text-white shadow-crayon hover:scale-105" 
-                      : "hover:bg-paper-white hover:text-foreground hover:shadow-soft"
-                    }
-                  `}
-                >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {item.label}
+                <div key={item.id} className={`relative ${rotation} transition-all duration-300`}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleNavigation(item.id)}
+                    className={`
+                      font-handwritten border-2 border-zinc-900 dark:border-white rounded-lg
+                      shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white
+                      hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px]
+                      transition-all duration-300
+                      ${isActive 
+                        ? "bg-amber-400 text-zinc-900 shadow-[4px_4px_0px_0px]" 
+                        : "bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700"
+                      }
+                    `}
+                  >
+                    <Icon className="w-4 h-4 mr-2" />
+                    {item.label}
+                  </Button>
                   {isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-sm" />
+                    <div className="absolute -top-1 -right-1 text-sm rotate-12">⭐</div>
                   )}
-                </Button>
+                </div>
               );
             })}
           </div>
 
-          {/* Featured badge */}
-          <div className="hidden md:block">
-            <Badge className="bg-gradient-to-r from-crayon-yellow/20 to-crayon-orange/20 text-foreground border border-crayon-yellow/30 shadow-soft hover:scale-105 transition-transform duration-300">
+          {/* Creative Featured badge */}
+          <div className="hidden md:block relative rotate-[2deg]">
+            <div className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-2 border-blue-500 rounded-full px-3 py-1 font-handwritten text-sm shadow-[2px_2px_0px_0px] shadow-blue-500 hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-300 cursor-pointer">
               ✨ Custom Art Available
-            </Badge>
+            </div>
           </div>
 
           {/* Mobile Menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="sm" className="hover:bg-paper-white rounded-xl">
+              <Button variant="ghost" size="sm" className="font-handwritten border-2 border-zinc-900 dark:border-white bg-zinc-50 dark:bg-zinc-800 hover:bg-white dark:hover:bg-zinc-700 shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-300 rounded-lg">
                 <Menu className="w-6 h-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 bg-white/98 backdrop-blur-md border-l border-sketch-gray/30">
+            <SheetContent side="right" className="w-80 bg-white/98 dark:bg-zinc-900/98 backdrop-blur-md border-l-2 border-zinc-900 dark:border-white">
               <div className="flex flex-col h-full">
                 {/* Mobile Logo */}
                 <div className="flex items-center gap-3 pb-8 pt-4">
-                  <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center shadow-crayon">
-                    <Palette className="w-7 h-7 text-white" />
+                  <div className="w-12 h-12 bg-amber-400 border-2 border-zinc-900 dark:border-white rounded-full flex items-center justify-center shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white rotate-[5deg]">
+                    <Palette className="w-7 h-7 text-zinc-900" />
                   </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-foreground">Farhana</h2>
-                    <p className="text-sm text-muted-foreground">Art Studio</p>
+                  <div className="relative">
+                    <h2 className="text-2xl font-bold font-handwritten text-zinc-900 dark:text-white rotate-[-1deg]">Farhana</h2>
+                    <p className="text-sm font-handwritten text-zinc-600 dark:text-zinc-400 rotate-[1deg]">Art Studio ✨</p>
                   </div>
                 </div>
 
                 {/* Mobile Menu Items */}
-                <div className="flex flex-col gap-2">
-                  {menuItems.map((item) => {
+                <div className="flex flex-col gap-3">
+                  {menuItems.map((item, index) => {
                     const Icon = item.icon;
                     const isActive = activeSection === item.id;
+                    const rotations = ['rotate-[-1deg]', 'rotate-[1deg]', 'rotate-[-0.5deg]'];
+                    const rotation = rotations[index % rotations.length];
                     
                     return (
-                      <Button
-                        key={item.id}
-                        variant={isActive ? "default" : "ghost"}
-                        onClick={() => handleNavigation(item.id)}
-                        className={`
-                          justify-start h-14 text-base rounded-xl
-                          ${isActive 
-                            ? "bg-gradient-primary text-white shadow-crayon" 
-                            : "hover:bg-paper-white hover:shadow-soft"
-                          }
-                        `}
-                      >
-                        <Icon className="w-5 h-5 mr-3" />
-                        {item.label}
-                      </Button>
+                      <div key={item.id} className={`relative ${rotation}`}>
+                        <Button
+                          variant="ghost"
+                          onClick={() => handleNavigation(item.id)}
+                          className={`
+                            w-full justify-start h-14 text-base font-handwritten
+                            border-2 border-zinc-900 dark:border-white rounded-lg
+                            shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white
+                            hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px]
+                            transition-all duration-300
+                            ${isActive 
+                              ? "bg-amber-400 text-zinc-900 shadow-[4px_4px_0px_0px]" 
+                              : "bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700"
+                            }
+                          `}
+                        >
+                          <Icon className="w-5 h-5 mr-3" />
+                          {item.label}
+                        </Button>
+                        {isActive && (
+                          <div className="absolute -top-1 -right-1 text-lg rotate-12">⭐</div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
 
                 {/* Mobile Featured */}
-                <div className="mt-auto pb-6">
-                  <Badge className="w-full justify-center py-3 bg-gradient-to-r from-crayon-yellow/20 to-crayon-orange/20 text-foreground border border-crayon-yellow/30 rounded-xl shadow-soft">
+                <div className="mt-auto pb-6 relative rotate-[1deg]">
+                  <div className="w-full text-center py-3 bg-blue-500/20 text-blue-700 dark:text-blue-300 border-2 border-blue-500 rounded-lg font-handwritten shadow-[2px_2px_0px_0px] shadow-blue-500">
                     ✨ Custom Art Available
-                  </Badge>
+                  </div>
                 </div>
               </div>
             </SheetContent>
