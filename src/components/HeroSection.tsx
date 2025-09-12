@@ -42,7 +42,7 @@ const HeroSection = ({ onExploreGallery, onStartCommission }: HeroSectionProps) 
               </p>
 
               {/* Artist description */}
-              <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-soft border border-sketch-gray/20">
+              <div className="max-w-3xl mx-auto">
                 <p className="text-lg md:text-xl text-foreground leading-relaxed">
                   Bringing imagination to life through vibrant colors, delicate brushstrokes, and digital artistry. 
                   Each piece is a journey from concept to creation, crafted with love and attention to every detail.
