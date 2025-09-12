@@ -17,6 +17,7 @@ interface NavigationProps {
   onNavigate: (section: string) => void;
 }
 
+// Fixed: Using Image instead of Gallery from lucide-react
 const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
