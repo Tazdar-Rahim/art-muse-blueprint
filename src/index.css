@@ -6,131 +6,128 @@
 
 @layer base {
   :root {
-    /* Base colors - Warm, artistic palette */
-    --background: 48 30% 98%;
-    --foreground: 24 30% 12%;
-
-    /* Card system - Soft, gallery-like */
-    --card: 48 40% 97%;
-    --card-foreground: 24 25% 15%;
-
-    --popover: 48 40% 97%;
-    --popover-foreground: 24 25% 15%;
-
-    /* Primary - Rich art gallery bronze */
-    --primary: 35 65% 25%;
-    --primary-foreground: 48 40% 98%;
-    --primary-glow: 35 75% 45%;
-
-    /* Secondary - Soft cream */
-    --secondary: 45 35% 92%;
-    --secondary-foreground: 24 30% 20%;
-
-    /* Muted tones */
-    --muted: 42 20% 90%;
-    --muted-foreground: 28 15% 45%;
-
-    /* Accent - Warm terracotta */
-    --accent: 18 70% 75%;
-    --accent-foreground: 24 30% 15%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 48 40% 98%;
-
-    /* Borders and inputs */
-    --border: 42 25% 87%;
-    --input: 42 25% 87%;
-    --ring: 35 65% 25%;
-
+    /* Base colors - Clean white background with crayon-inspired palette */
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 262 80% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 47 96% 58%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262 80% 50%;
+    --chart-1: 262 80% 50%;
+    --chart-2: 47 96% 58%;
+    --chart-3: 310 70% 60%;
+    --chart-4: 180 60% 50%;
+    --chart-5: 30 80% 60%;
     --radius: 0.75rem;
 
-    /* Art-specific colors */
-    --gallery-gold: 43 74% 66%;
-    --canvas-white: 48 33% 96%;
-    --artist-signature: 24 45% 25%;
-    --frame-brown: 28 35% 35%;
+    /* Crayon-inspired colors */
+    --crayon-red: 0 75% 60%;
+    --crayon-orange: 25 85% 55%;
+    --crayon-yellow: 47 96% 58%;
+    --crayon-green: 120 60% 50%;
+    --crayon-blue: 210 85% 55%;
+    --crayon-purple: 280 70% 60%;
+    --crayon-pink: 330 80% 70%;
+    --paper-white: 0 0% 98%;
+    --sketch-gray: 220 10% 85%;
+    
+    /* Artistic gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--crayon-purple)), hsl(var(--crayon-pink)));
+    --gradient-gallery: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--paper-white)) 100%);
+    --gradient-canvas: radial-gradient(circle at center, hsl(var(--paper-white)) 0%, hsl(var(--background)) 100%);
+    --gradient-crayon: linear-gradient(90deg, hsl(var(--crayon-red)) 0%, hsl(var(--crayon-orange)) 16.67%, hsl(var(--crayon-yellow)) 33.33%, hsl(var(--crayon-green)) 50%, hsl(var(--crayon-blue)) 66.67%, hsl(var(--crayon-purple)) 83.33%, hsl(var(--crayon-pink)) 100%);
+    
+    /* Soft shadows for crayon effect */
+    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.08);
+    --shadow-elegant: 0 4px 16px -4px hsl(var(--primary) / 0.15);
+    --shadow-artwork: 0 8px 32px -8px hsl(0 0% 0% / 0.12);
+    --shadow-crayon: 0 2px 12px -3px hsl(var(--crayon-purple) / 0.2);
+    
+    /* Smooth transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    /* Gradients for artistic flair */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-gallery: linear-gradient(180deg, hsl(var(--canvas-white)), hsl(var(--secondary)));
-    --gradient-sunset: linear-gradient(45deg, hsl(18 70% 75%), hsl(43 74% 66%));
-
-    /* Shadows with warmth */
-    --shadow-soft: 0 4px 20px hsl(35 65% 25% / 0.1);
-    --shadow-elegant: 0 8px 30px hsl(35 65% 25% / 0.15);
-    --shadow-artwork: 0 12px 40px hsl(24 30% 12% / 0.2);
-
-    /* Animations */
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    --sidebar-background: 45 35% 95%;
-    --sidebar-foreground: 24 25% 25%;
-    --sidebar-primary: 35 65% 25%;
-    --sidebar-primary-foreground: 48 40% 98%;
-    --sidebar-accent: 45 30% 88%;
-    --sidebar-accent-foreground: 24 25% 25%;
-    --sidebar-border: 42 25% 87%;
-    --sidebar-ring: 35 65% 25%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 224 71.4% 4.1%;
+    --sidebar-primary: 262 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 262 80% 50%;
   }
 
   .dark {
-    /* Dark mode - Gallery after hours */
-    --background: 24 15% 8%;
-    --foreground: 48 25% 92%;
-
-    --card: 24 20% 12%;
-    --card-foreground: 48 25% 92%;
-
-    --popover: 24 20% 12%;
-    --popover-foreground: 48 25% 92%;
-
-    /* Primary - Glowing gold in darkness */
-    --primary: 43 74% 66%;
-    --primary-foreground: 24 15% 8%;
-    --primary-glow: 43 84% 76%;
-
-    --secondary: 24 15% 18%;
-    --secondary-foreground: 48 25% 88%;
-
-    --muted: 24 15% 15%;
-    --muted-foreground: 42 15% 60%;
-
-    /* Accent - Warm copper glow */
-    --accent: 18 60% 60%;
-    --accent-foreground: 48 25% 92%;
-
+    /* Dark mode maintains clean aesthetics with subtle crayon accents */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 262 80% 50%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 47 96% 58%;
+    --accent-foreground: 222.2 84% 4.9%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 48 25% 92%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 262 80% 50%;
+    --chart-1: 262 80% 50%;
+    --chart-2: 47 96% 58%;
+    --chart-3: 310 70% 60%;
+    --chart-4: 180 60% 50%;
+    --chart-5: 30 80% 60%;
 
-    --border: 24 15% 22%;
-    --input: 24 15% 22%;
-    --ring: 43 74% 66%;
+    /* Muted crayon colors for dark mode */
+    --crayon-red: 0 70% 55%;
+    --crayon-orange: 25 80% 50%;
+    --crayon-yellow: 47 90% 53%;
+    --crayon-green: 120 55% 45%;
+    --crayon-blue: 210 80% 50%;
+    --crayon-purple: 280 65% 55%;
+    --crayon-pink: 330 75% 65%;
+    --paper-white: 217.2 32.6% 17.5%;
+    --sketch-gray: 215 20.2% 25.1%;
+    
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--crayon-purple)), hsl(var(--crayon-pink)));
+    --gradient-gallery: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--paper-white)) 100%);
+    --gradient-canvas: radial-gradient(circle at center, hsl(var(--paper-white)) 0%, hsl(var(--background)) 100%);
+    --gradient-crayon: linear-gradient(90deg, hsl(var(--crayon-red)) 0%, hsl(var(--crayon-orange)) 16.67%, hsl(var(--crayon-yellow)) 33.33%, hsl(var(--crayon-green)) 50%, hsl(var(--crayon-blue)) 66.67%, hsl(var(--crayon-purple)) 83.33%, hsl(var(--crayon-pink)) 100%);
+    
+    /* Dark mode shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.25);
+    --shadow-elegant: 0 4px 16px -4px hsl(var(--primary) / 0.25);
+    --shadow-artwork: 0 8px 32px -8px hsl(0 0% 0% / 0.3);
+    --shadow-crayon: 0 2px 12px -3px hsl(var(--crayon-purple) / 0.3);
 
-    /* Art gallery colors for dark mode */
-    --gallery-gold: 43 84% 76%;
-    --canvas-white: 48 15% 92%;
-    --artist-signature: 48 25% 85%;
-    --frame-brown: 28 25% 65%;
-
-    /* Dark gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-gallery: linear-gradient(180deg, hsl(var(--background)), hsl(var(--secondary)));
-    --gradient-sunset: linear-gradient(45deg, hsl(18 60% 60%), hsl(43 74% 66%));
-
-    /* Glowing shadows for dark mode */
-    --shadow-soft: 0 4px 20px hsl(43 74% 66% / 0.1);
-    --shadow-elegant: 0 8px 30px hsl(43 74% 66% / 0.2);
-    --shadow-artwork: 0 12px 40px hsl(24 15% 8% / 0.6);
-
-    --sidebar-background: 24 15% 10%;
-    --sidebar-foreground: 48 25% 88%;
-    --sidebar-primary: 43 74% 66%;
-    --sidebar-primary-foreground: 24 15% 8%;
-    --sidebar-accent: 24 15% 18%;
-    --sidebar-accent-foreground: 48 25% 88%;
-    --sidebar-border: 24 15% 22%;
-    --sidebar-ring: 43 74% 66%;
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 262 80% 50%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 262 80% 50%;
   }
 }
 

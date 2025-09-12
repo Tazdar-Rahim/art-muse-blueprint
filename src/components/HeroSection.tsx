@@ -9,64 +9,84 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onExploreGallery, onStartCommission }: HeroSectionProps) => {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-gradient-gallery overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 left-10 opacity-20">
-        <Palette className="w-16 h-16 text-primary rotate-12" />
+    <section className="relative min-h-screen bg-gradient-canvas overflow-hidden">
+      {/* Crayon-style decorative elements */}
+      <div className="absolute top-16 left-8 opacity-40 animate-float">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-300 to-red-400 shadow-crayon transform rotate-12 flex items-center justify-center">
+          <Palette className="w-10 h-10 text-white" />
+        </div>
       </div>
-      <div className="absolute top-40 right-20 opacity-20">
-        <Sparkles className="w-12 h-12 text-accent rotate-45" />
+      <div className="absolute top-32 right-12 opacity-40 animate-float" style={{animationDelay: '1s'}}>
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-400 shadow-crayon transform rotate-45 flex items-center justify-center">
+          <Sparkles className="w-8 h-8 text-white" />
+        </div>
       </div>
-      <div className="absolute bottom-32 left-1/4 opacity-20">
-        <Heart className="w-10 h-10 text-primary/60 -rotate-12" />
+      <div className="absolute bottom-24 left-1/4 opacity-40 animate-float" style={{animationDelay: '2s'}}>
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-300 to-pink-400 shadow-crayon transform -rotate-12 flex items-center justify-center">
+          <Heart className="w-6 h-6 text-white" />
+        </div>
       </div>
 
-      <div className="container mx-auto px-4 text-center relative z-10">
-        <div className="max-w-4xl mx-auto space-y-8">
-          {/* Artist intro badge */}
-          <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 text-sm font-medium">
-            ✨ Welcome to Farhana's Art Studio
-          </Badge>
+      {/* Artist portfolio section */}
+      <div className="container mx-auto px-6 pt-32 pb-16">
+        <div className="max-w-6xl mx-auto">
           
-          {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight">
-            Where
-            <span className="text-transparent bg-gradient-primary bg-clip-text mx-4">
-              Creativity
-            </span>
-            Meets Canvas
-          </h1>
-          
-          {/* Subheading */}
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Original paintings, digital artwork, and custom commissions crafted with passion. 
-            Discover unique pieces that tell your story.
-          </p>
+          {/* Portfolio header */}
+          <div className="text-center mb-16 space-y-6">
+            {/* Artist name with crayon underline */}
+            <div className="relative inline-block mb-4">
+              <h1 className="text-6xl md:text-8xl font-bold text-foreground leading-none tracking-tight">
+                Farhana
+              </h1>
+              <div className="absolute -bottom-2 left-0 right-0 h-3 bg-gradient-crayon opacity-60 rounded-full transform -skew-x-12"></div>
+            </div>
+            
+            {/* Artistic subtitle */}
+            <p className="text-2xl md:text-3xl text-muted-foreground font-light mb-8">
+              Visual Artist & Creative Soul
+            </p>
 
-          {/* Art mediums showcase */}
-          <div className="flex flex-wrap justify-center gap-3 pt-4">
+            {/* Artist description */}
+            <div className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border border-sketch-gray/20">
+              <p className="text-lg md:text-xl text-foreground leading-relaxed">
+                Bringing imagination to life through vibrant colors, delicate brushstrokes, and digital artistry. 
+                Each piece is a journey from concept to creation, crafted with love and attention to every detail.
+              </p>
+              
+              {/* Signature-style line */}
+              <div className="mt-6 flex justify-center">
+                <div className="w-32 h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-transparent rounded-full"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Art mediums with crayon-style badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
             {[
-              "Oil Paintings",
-              "Watercolor",
-              "Digital Art", 
-              "Portraits",
-              "Landscapes",
-              "Custom Commissions"
-            ].map((medium) => (
-              <Badge key={medium} variant="outline" className="px-3 py-1">
+              { medium: "Oil Paintings", color: "from-red-400 to-red-500" },
+              { medium: "Watercolor", color: "from-blue-400 to-blue-500" },
+              { medium: "Digital Art", color: "from-purple-400 to-purple-500" },
+              { medium: "Portraits", color: "from-pink-400 to-pink-500" },
+              { medium: "Landscapes", color: "from-green-400 to-green-500" },
+              { medium: "Custom Commissions", color: "from-yellow-400 to-yellow-500" }
+            ].map(({ medium, color }) => (
+              <Badge 
+                key={medium} 
+                className={`px-4 py-2 bg-gradient-to-r ${color} text-white border-0 shadow-crayon hover:scale-105 transition-transform duration-300 font-medium`}
+              >
                 {medium}
               </Badge>
             ))}
           </div>
           
           {/* Call to action buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button
               size="lg"
               onClick={onExploreGallery}
-              className="bg-gradient-primary hover:shadow-elegant transition-all duration-300 text-lg px-8 py-6"
+              className="bg-gradient-primary hover:shadow-elegant hover:scale-105 transition-all duration-300 text-lg px-10 py-4 rounded-2xl shadow-soft border-0"
             >
-              Explore Gallery
+              View My Gallery
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             
@@ -74,36 +94,40 @@ const HeroSection = ({ onExploreGallery, onStartCommission }: HeroSectionProps) 
               size="lg"
               variant="outline"
               onClick={onStartCommission}
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-lg px-8 py-6"
+              className="border-2 border-primary/30 bg-white/90 text-primary hover:bg-primary hover:text-white hover:scale-105 transition-all duration-300 text-lg px-10 py-4 rounded-2xl shadow-soft backdrop-blur-sm"
             >
-              Commission Artwork
+              Commission Art
               <Palette className="w-5 h-5 ml-2" />
             </Button>
           </div>
 
-          {/* Trust indicators */}
-          <div className="pt-12 space-y-4">
-            <p className="text-sm text-muted-foreground">Trusted by art collectors worldwide</p>
-            <div className="flex justify-center items-center gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-accent rounded-full"></span>
-                100+ Happy Customers
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-accent rounded-full"></span>
-                Custom Commissions
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-accent rounded-full"></span>
-                Worldwide Shipping
-              </div>
+          {/* Trust indicators with artistic touch */}
+          <div className="text-center mt-16 space-y-6">
+            <p className="text-muted-foreground font-medium">Creating joy through art worldwide</p>
+            <div className="flex flex-wrap justify-center items-center gap-8 text-foreground/80">
+              {[
+                { count: "100+", label: "Happy Collectors", color: "bg-red-400" },
+                { count: "50+", label: "Custom Pieces", color: "bg-blue-400" },
+                { count: "Global", label: "Shipping", color: "bg-green-400" }
+              ].map(({ count, label, color }) => (
+                <div key={label} className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 shadow-soft">
+                  <div className={`w-3 h-3 ${color} rounded-full shadow-sm`}></div>
+                  <span className="font-semibold text-sm">
+                    {count} {label}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/20 pointer-events-none" />
+      {/* Artistic background elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 -left-20 w-40 h-40 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-20 w-32 h-32 bg-gradient-to-br from-blue-200/30 to-cyan-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-yellow-100/20 to-orange-100/20 rounded-full blur-3xl"></div>
+      </div>
     </section>
   );
 };
