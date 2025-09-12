@@ -14,7 +14,197 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      artwork: {
+        Row: {
+          category: Database["public"]["Enums"]["artwork_category"]
+          created_at: string
+          description: string | null
+          dimensions: string | null
+          id: string
+          image_urls: string[] | null
+          is_available: boolean | null
+          is_featured: boolean | null
+          medium: Database["public"]["Enums"]["artwork_medium"] | null
+          price: number | null
+          style: Database["public"]["Enums"]["artwork_style"] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["artwork_category"]
+          created_at?: string
+          description?: string | null
+          dimensions?: string | null
+          id?: string
+          image_urls?: string[] | null
+          is_available?: boolean | null
+          is_featured?: boolean | null
+          medium?: Database["public"]["Enums"]["artwork_medium"] | null
+          price?: number | null
+          style?: Database["public"]["Enums"]["artwork_style"] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["artwork_category"]
+          created_at?: string
+          description?: string | null
+          dimensions?: string | null
+          id?: string
+          image_urls?: string[] | null
+          is_available?: boolean | null
+          is_featured?: boolean | null
+          medium?: Database["public"]["Enums"]["artwork_medium"] | null
+          price?: number | null
+          style?: Database["public"]["Enums"]["artwork_style"] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      commission_packages: {
+        Row: {
+          base_price: number
+          category: Database["public"]["Enums"]["artwork_category"]
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          includes: string[] | null
+          is_active: boolean | null
+          name: string
+          style: Database["public"]["Enums"]["artwork_style"] | null
+          turnaround_days: number | null
+          updated_at: string
+        }
+        Insert: {
+          base_price: number
+          category: Database["public"]["Enums"]["artwork_category"]
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          includes?: string[] | null
+          is_active?: boolean | null
+          name: string
+          style?: Database["public"]["Enums"]["artwork_style"] | null
+          turnaround_days?: number | null
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          category?: Database["public"]["Enums"]["artwork_category"]
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          includes?: string[] | null
+          is_active?: boolean | null
+          name?: string
+          style?: Database["public"]["Enums"]["artwork_style"] | null
+          turnaround_days?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      commission_requests: {
+        Row: {
+          created_at: string
+          custom_requirements: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          estimated_price: number | null
+          id: string
+          notes: string | null
+          package_id: string | null
+          reference_images: string[] | null
+          status: Database["public"]["Enums"]["commission_status"] | null
+          updated_at: string
+          voice_note_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          custom_requirements?: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          estimated_price?: number | null
+          id?: string
+          notes?: string | null
+          package_id?: string | null
+          reference_images?: string[] | null
+          status?: Database["public"]["Enums"]["commission_status"] | null
+          updated_at?: string
+          voice_note_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          custom_requirements?: string | null
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          estimated_price?: number | null
+          id?: string
+          notes?: string | null
+          package_id?: string | null
+          reference_images?: string[] | null
+          status?: Database["public"]["Enums"]["commission_status"] | null
+          updated_at?: string
+          voice_note_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_requests_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "commission_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultation_bookings: {
+        Row: {
+          created_at: string
+          customer_email: string
+          customer_name: string
+          id: string
+          notes: string | null
+          preferred_time: string | null
+          project_description: string | null
+          scheduled_datetime: string | null
+          status: Database["public"]["Enums"]["consultation_status"] | null
+          updated_at: string
+          whatsapp_number: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          id?: string
+          notes?: string | null
+          preferred_time?: string | null
+          project_description?: string | null
+          scheduled_datetime?: string | null
+          status?: Database["public"]["Enums"]["consultation_status"] | null
+          updated_at?: string
+          whatsapp_number: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          id?: string
+          notes?: string | null
+          preferred_time?: string | null
+          project_description?: string | null
+          scheduled_datetime?: string | null
+          status?: Database["public"]["Enums"]["consultation_status"] | null
+          updated_at?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +213,28 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      artwork_category:
+        | "original_painting"
+        | "digital_art"
+        | "print"
+        | "illustration"
+      artwork_medium:
+        | "oil"
+        | "acrylic"
+        | "watercolor"
+        | "digital"
+        | "pencil"
+        | "charcoal"
+        | "mixed_media"
+      artwork_style:
+        | "portrait"
+        | "landscape"
+        | "abstract"
+        | "still_life"
+        | "contemporary"
+        | "realism"
+      commission_status: "pending" | "in_progress" | "completed" | "cancelled"
+      consultation_status: "requested" | "scheduled" | "completed" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +361,32 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      artwork_category: [
+        "original_painting",
+        "digital_art",
+        "print",
+        "illustration",
+      ],
+      artwork_medium: [
+        "oil",
+        "acrylic",
+        "watercolor",
+        "digital",
+        "pencil",
+        "charcoal",
+        "mixed_media",
+      ],
+      artwork_style: [
+        "portrait",
+        "landscape",
+        "abstract",
+        "still_life",
+        "contemporary",
+        "realism",
+      ],
+      commission_status: ["pending", "in_progress", "completed", "cancelled"],
+      consultation_status: ["requested", "scheduled", "completed", "cancelled"],
+    },
   },
 } as const
