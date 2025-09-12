@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
+import HeroScrollAnimation from "@/components/ui/hero-scroll-animation";
 import ArtworkCard from "@/components/ArtworkCard";
 import CommissionPackageCard from "@/components/CommissionPackageCard";
 import CommissionRequestForm from "@/components/CommissionRequestForm";
@@ -105,6 +106,8 @@ const Index = () => {
               onExploreGallery={() => setActiveSection("gallery")}
               onStartCommission={() => setActiveSection("commission")}
             />
+            
+            <HeroScrollAnimation />
 
             {/* Featured Artworks */}
             <section className="container mx-auto px-4">
