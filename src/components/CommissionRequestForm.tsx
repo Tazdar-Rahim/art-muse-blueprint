@@ -186,10 +186,10 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                 <SelectContent>
                   <SelectItem value="">Custom Commission</SelectItem>
                   {/* These would be dynamically loaded */}
-                  <SelectItem value="portrait-basic">Portrait Package - Basic ($150)</SelectItem>
-                  <SelectItem value="portrait-premium">Portrait Package - Premium ($300)</SelectItem>
-                  <SelectItem value="landscape">Landscape Commission ($250)</SelectItem>
-                  <SelectItem value="digital">Digital Art Commission ($100)</SelectItem>
+                  <SelectItem value="portrait-basic">Portrait Package - Basic (₹12,500)</SelectItem>
+                  <SelectItem value="portrait-premium">Portrait Package - Premium (₹25,000)</SelectItem>
+                  <SelectItem value="landscape">Landscape Commission (₹20,000)</SelectItem>
+                  <SelectItem value="digital">Digital Art Commission (₹8,000)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

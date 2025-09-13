@@ -73,7 +73,7 @@ const ArtworkCard = ({
                   onClick={() => onPurchase(id)}
                 >
                   <ShoppingCart className="w-4 h-4 mr-2" />
-                  ${price}
+                  ₹{price}
                 </Button>
               )}
             </div>
@@ -115,7 +115,7 @@ const ArtworkCard = ({
               <span className="text-sm font-handwritten text-zinc-600 dark:text-zinc-400">{dimensions}</span>
             )}
             {price && (
-              <span className="text-xl font-bold font-handwritten text-amber-600 dark:text-amber-400">${price}</span>
+              <span className="text-xl font-bold font-handwritten text-amber-600 dark:text-amber-400">₹{price}</span>
             )}
           </div>
         </div>

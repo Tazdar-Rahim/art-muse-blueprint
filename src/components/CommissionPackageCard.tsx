@@ -95,7 +95,7 @@ const CommissionPackageCard = ({
           <div className="flex items-center justify-between pt-4 border-t-2 border-zinc-900 dark:border-white border-dashed">
             <div className="space-y-1">
               <div className="text-3xl font-bold font-handwritten text-amber-600 dark:text-amber-400">
-                ${basePrice}
+                ₹{basePrice}
               </div>
               {turnaroundDays && (
                 <div className="flex items-center gap-1 text-sm font-handwritten text-zinc-600 dark:text-zinc-400">
