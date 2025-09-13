@@ -22,7 +22,6 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { id: "home", label: "Home", icon: Home },
     { id: "gallery", label: "Gallery", icon: Image },
     { id: "commission", label: "Commission", icon: Palette },
     { id: "consultation", label: "Consultation", icon: MessageSquare },
@@ -55,52 +54,9 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
             </div>
           </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-2">
-            {menuItems.map((item, index) => {
-              const Icon = item.icon;
-              const isActive = activeSection === item.id;
-              const rotations = ['rotate-[-1deg]', 'rotate-[1deg]', 'rotate-[-0.5deg]'];
-              const rotation = rotations[index % rotations.length];
-              
-              return (
-                <div key={item.id} className={`relative ${rotation} transition-all duration-300`}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleNavigation(item.id)}
-                    className={`
-                      font-handwritten border-2 border-zinc-900 dark:border-white rounded-lg
-                      shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white
-                      hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px]
-                      transition-all duration-300
-                      ${isActive 
-                        ? "bg-amber-400 text-zinc-900 shadow-[4px_4px_0px_0px]" 
-                        : "bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700"
-                      }
-                    `}
-                  >
-                    <Icon className="w-4 h-4 mr-2" />
-                    {item.label}
-                  </Button>
-                  {isActive && (
-                    <div className="absolute -top-1 -right-1 text-sm rotate-12">⭐</div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Creative Featured badge */}
-          <div className="hidden md:block relative rotate-[2deg]">
-            <div className="bg-blue-500/20 text-blue-700 dark:text-blue-300 border-2 border-blue-500 rounded-full px-3 py-1 font-handwritten text-sm shadow-[2px_2px_0px_0px] shadow-blue-500 hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-300 cursor-pointer">
-              ✨ Custom Art Available
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
+          {/* Hamburger Menu for both mobile and desktop */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
+            <SheetTrigger asChild>
               <Button variant="ghost" size="sm" className="font-handwritten border-2 border-zinc-900 dark:border-white bg-zinc-50 dark:bg-zinc-800 hover:bg-white dark:hover:bg-zinc-700 shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-300 rounded-lg">
                 <Menu className="w-6 h-6" />
               </Button>
