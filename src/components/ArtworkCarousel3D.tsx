@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import ArtworkCard from "@/components/ArtworkCard";
 import { Button } from "@/components/ui/button";
+import { useCartWishlist } from "@/contexts/CartWishlistContext";
 
 interface ArtworkData {
   id: string;
@@ -26,6 +27,7 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { addToWishlist, isInWishlist } = useCartWishlist();
 
   const handlePrevious = () => {
     if (isTransitioning) return;
@@ -96,25 +98,42 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                 opacity: getCardOpacity(index),
                 zIndex: getCardZIndex(index),
                 transformStyle: "preserve-3d",
-                width: "280px", // Reduced from default card width
+                width: "320px", // Made cards bigger
               }}
             >
-              {/* Scaled down ArtworkCard */}
-              <div className="transform scale-75 origin-center">
-                <ArtworkCard
-                  id={artwork.id}
-                  title={artwork.title}
-                  description={artwork.description}
-                  category={artwork.category}
-                  medium={artwork.medium}
-                  style={artwork.style}
-                  dimensions={artwork.dimensions}
-                  price={artwork.price}
-                  imageUrls={artwork.image_urls}
-                  isFeatured={artwork.is_featured}
-                  onView={onView}
-                  onPurchase={onPurchase}
-                />
+              {/* Bigger cards with save button */}
+              <div className="transform scale-90 origin-center">
+                <div className="relative">
+                  <ArtworkCard
+                    id={artwork.id}
+                    title={artwork.title}
+                    description={artwork.description}
+                    category={artwork.category}
+                    medium={artwork.medium}
+                    style={artwork.style}
+                    dimensions={artwork.dimensions}
+                    price={artwork.price}
+                    imageUrls={artwork.image_urls}
+                    isFeatured={artwork.is_featured}
+                    onView={onView}
+                    onPurchase={onPurchase}
+                  />
+                  {/* Save Me Button */}
+                  <Button
+                    size="sm"
+                    variant={isInWishlist(artwork.id) ? "default" : "outline"}
+                    onClick={() => addToWishlist({
+                      id: artwork.id,
+                      title: artwork.title,
+                      price: artwork.price,
+                      imageUrl: artwork.image_urls?.[0],
+                      category: artwork.category,
+                    })}
+                    className="absolute top-3 right-3 z-10 font-handwritten border-2 border-foreground shadow-[2px_2px_0px_0px] shadow-foreground hover:shadow-[3px_3px_0px_0px] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-200"
+                  >
+                    <Heart className={`w-4 h-4 ${isInWishlist(artwork.id) ? 'fill-current' : ''}`} />
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

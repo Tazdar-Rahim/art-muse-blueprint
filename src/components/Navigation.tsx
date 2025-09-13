@@ -9,7 +9,9 @@ import {
   Palette, 
   MessageSquare, 
   ShoppingBag,
-  Phone
+  Phone,
+  ShoppingCart,
+  Heart
 } from "lucide-react";
 
 interface NavigationProps {
@@ -26,7 +28,9 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
     { id: "commission", label: "Commission", icon: Palette },
     { id: "consultation", label: "Consultation", icon: MessageSquare },
     { id: "shop", label: "Shop", icon: ShoppingBag },
-    { id: "contact", label: "Contact", icon: Phone }
+    { id: "contact", label: "Contact", icon: Phone },
+    { id: "cart", label: "My Cart", icon: ShoppingCart },
+    { id: "wishlist", label: "Wishlist", icon: Heart }
   ];
 
   const handleNavigation = (section: string) => {

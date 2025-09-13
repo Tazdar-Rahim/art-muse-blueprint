@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, ShoppingCart } from "lucide-react";
+import { Eye, ShoppingCart, Plus } from "lucide-react";
+import { useCartWishlist } from "@/contexts/CartWishlistContext";
 
 interface ArtworkCardProps {
   id: string;
@@ -33,6 +34,19 @@ const ArtworkCard = ({
   id
 }: ArtworkCardProps) => {
   const imageUrl = imageUrls?.[0] || '/placeholder.svg';
+  const { addToCart } = useCartWishlist();
+
+  const handleAddToCart = () => {
+    if (price) {
+      addToCart({
+        id,
+        title,
+        price,
+        imageUrl,
+        category,
+      });
+    }
+  };
   
   // Random rotation for creative effect
   const rotations = ['rotate-[-1deg]', 'rotate-[1deg]', 'rotate-[-2deg]'];
@@ -64,17 +78,26 @@ const ArtworkCard = ({
                 onClick={() => onView(id)}
               >
                 <Eye className="w-4 h-4 mr-2" />
-                View Art
+                View
               </Button>
               {price && (
-                <Button
-                  size="sm"
-                  className="flex-1 font-handwritten border-2 border-zinc-900 dark:border-white bg-amber-400 text-zinc-900 hover:bg-amber-300 shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px]"
-                  onClick={() => onPurchase(id)}
-                >
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  ₹{price}
-                </Button>
+                <>
+                  <Button
+                    size="sm"
+                    className="font-handwritten border-2 border-zinc-900 dark:border-white bg-green-500 text-white hover:bg-green-600 shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                    onClick={handleAddToCart}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="font-handwritten border-2 border-zinc-900 dark:border-white bg-amber-400 text-zinc-900 hover:bg-amber-300 shadow-[2px_2px_0px_0px] shadow-zinc-900 dark:shadow-white hover:shadow-[4px_4px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+                    onClick={() => onPurchase(id)}
+                  >
+                    <ShoppingCart className="w-4 h-4 mr-1" />
+                    Buy
+                  </Button>
+                </>
               )}
             </div>
           </div>

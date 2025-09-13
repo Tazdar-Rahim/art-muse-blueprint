@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
@@ -17,14 +18,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/components/ui/use-toast";
 import { Search, Filter, Palette, Mail, Phone, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
 const Index = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("home");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [isCommissionFormOpen, setIsCommissionFormOpen] = useState(false);
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
+  const handleNavigation = (section: string) => {
+    if (section === "cart") {
+      navigate("/cart");
+    } else if (section === "wishlist") {
+      navigate("/wishlist");
+    } else {
+      setActiveSection(section);
+    }
+  };
 
   // Fetch artwork
   const {
@@ -75,10 +85,7 @@ const Index = () => {
     });
   };
   const handleArtworkPurchase = (id: string) => {
-    toast({
-      title: "Purchase Artwork",
-      description: "Purchase flow would start here with payment processing."
-    });
+    navigate("/checkout");
   };
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackageId(packageId);
@@ -318,7 +325,7 @@ const Index = () => {
     }
   };
   return <div className="min-h-screen bg-background">
-      <Navigation activeSection={activeSection} onNavigate={setActiveSection} />
+      <Navigation activeSection={activeSection} onNavigate={handleNavigation} />
       
       {renderContent()}
       
