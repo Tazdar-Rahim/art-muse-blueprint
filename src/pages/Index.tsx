@@ -182,7 +182,7 @@ const Index = () => {
             {filteredArtwork?.length === 0 && <div className="text-center py-16">
                 <Palette className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-foreground mb-2">No artwork found</h3>
-                <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
+                
               </div>}
           </div>;
       case "commission":
@@ -269,14 +269,8 @@ const Index = () => {
                 <div className="border-t border-border pt-6">
                   <h3 className="font-semibold mb-4">Follow My Art Journey</h3>
                   <div className="flex gap-4">
-                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0" asChild>
-                      <a 
-                        href="https://www.instagram.com/farhana_shaheen_art/" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                      >
-                        <Instagram className="w-5 h-5" />
-                      </a>
+                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
+                      <Instagram className="w-5 h-5" />
                     </Button>
                     <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
                       <Facebook className="w-5 h-5" />
