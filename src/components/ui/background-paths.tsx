@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { SparklesText } from "@/components/ui/sparkles-text";
 
 function FloatingPaths({ position }: { position: number }) {
     const paths = Array.from({ length: 36 }, (_, i) => ({
@@ -71,35 +72,15 @@ export function BackgroundPaths({
                     transition={{ duration: 2 }}
                     className="text-center"
                 >
-                    <h1 className="font-handwritten text-4xl sm:text-5xl md:text-6xl font-bold tracking-wide transform rotate-[-2deg]">
-                        {words.map((word, wordIndex) => (
-                            <span
-                                key={wordIndex}
-                                className="inline-block mr-4 last:mr-0"
-                            >
-                                {word.split("").map((letter, letterIndex) => (
-                                    <motion.span
-                                        key={`${wordIndex}-${letterIndex}`}
-                                        initial={{ y: 100, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        transition={{
-                                            delay:
-                                                wordIndex * 0.1 +
-                                                letterIndex * 0.03,
-                                            type: "spring",
-                                            stiffness: 150,
-                                            damping: 25,
-                                        }}
-                                        className="inline-block text-transparent bg-clip-text 
-                                        bg-gradient-to-r from-primary to-primary/70 
-                                        dark:from-white dark:to-white/80"
-                                    >
-                                        {letter}
-                                    </motion.span>
-                                ))}
-                            </span>
-                        ))}
-                    </h1>
+                    <SparklesText 
+                        text={title}
+                        className="font-handwritten text-4xl sm:text-5xl md:text-6xl font-bold tracking-wide transform rotate-[-2deg] text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70 dark:from-white dark:to-white/80"
+                        sparklesCount={15}
+                        colors={{
+                            first: "hsl(var(--primary))",
+                            second: "hsl(var(--accent))"
+                        }}
+                    />
                 </motion.div>
             </div>
         </div>
