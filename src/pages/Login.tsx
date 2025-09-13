@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { BackButton } from '@/components/ui/back-button';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -67,7 +68,9 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+      <div className="w-full max-w-md space-y-4">
+        <BackButton to="/" />
+        <Card className="w-full">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-handwritten">Farhana's Art Studio</CardTitle>
           <CardDescription>Admin Portal</CardDescription>
@@ -137,6 +140,7 @@ const Login = () => {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };

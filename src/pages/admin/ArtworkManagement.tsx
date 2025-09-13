@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { uploadMultipleFiles } from '@/lib/storage';
 import { Plus, Edit, Trash2, Image } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { BackButton } from '@/components/ui/back-button';
 
 interface Artwork {
   id: string;
@@ -210,6 +211,7 @@ const ArtworkManagement = () => {
 
   return (
     <div className="space-y-6">
+      <BackButton />
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-handwritten font-bold">Artwork Management</h1>

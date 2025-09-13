@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Eye, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { BackButton } from '@/components/ui/back-button';
 
 interface CommissionRequest {
   id: string;
@@ -116,6 +117,7 @@ const CommissionRequests = () => {
 
   return (
     <div className="space-y-6">
+      <BackButton />
       <div>
         <h1 className="text-3xl font-handwritten font-bold">Commission Requests</h1>
         <p className="text-muted-foreground">Manage incoming commission requests</p>

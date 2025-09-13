@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { BackButton } from '@/components/ui/back-button';
 
 interface CommissionPackage {
   id: string;
@@ -165,6 +166,7 @@ const CommissionPackages = () => {
 
   return (
     <div className="space-y-6">
+      <BackButton />
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-handwritten font-bold">Commission Packages</h1>
