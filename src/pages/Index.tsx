@@ -431,12 +431,24 @@ const Index = () => {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start h-16 text-left"
+                    onClick={() => window.open('/login', '_blank')}
+                  >
+                    <Search className="w-6 h-6 mr-4 text-gallery-gold" />
+                    <div>
+                      <div className="font-semibold">Admin Portal</div>
+                      <div className="text-sm text-muted-foreground">Manage content and orders</div>
+                    </div>
+                  </Button>
+
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start h-16 text-left"
                     onClick={() => setActiveSection("gallery")}
                   >
                     <Search className="w-6 h-6 mr-4 text-gallery-gold" />
                     <div>
                       <div className="font-semibold">Browse Gallery</div>
-                      <div className="text-sm text-muted-foreground">Explore available artworks</div>
+                      <div className="text-sm text-muted-foreground">View all available artworks</div>
                     </div>
                   </Button>
                 </div>
@@ -449,6 +461,22 @@ const Index = () => {
         return null;
     }
   };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation 
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
+      />
+      
+      {renderContent()}
+    </div>
+  );
+      />
+      
+      {renderContent()}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
