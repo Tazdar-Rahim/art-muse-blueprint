@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import { ArtworkCarousel3D } from "@/components/ArtworkCarousel3D";
+
 import ArtworkCard from "@/components/ArtworkCard";
 import CommissionPackageCard from "@/components/CommissionPackageCard";
 import CommissionRequestForm from "@/components/CommissionRequestForm";
@@ -117,19 +117,31 @@ const Index = () => {
               </div>
 
               {artworkLoading ? (
-                <div className="flex justify-center items-center h-96">
-                  <div className="flex gap-4">
-                    {[1, 2, 3].map(i => (
-                      <Card key={i} className="w-72 h-80 animate-pulse bg-muted" />
-                    ))}
-                  </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3].map(i => (
+                    <Card key={i} className="h-80 animate-pulse bg-muted" />
+                  ))}
                 </div>
               ) : (
-                <ArtworkCarousel3D
-                  artworks={artwork?.filter(item => item.is_featured).slice(0, 8) || []}
-                  onView={handleArtworkView}
-                  onPurchase={handleArtworkPurchase}
-                />
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {artwork?.filter(item => item.is_featured).slice(0, 6).map((item) => (
+                    <ArtworkCard
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      description={item.description}
+                      category={item.category}
+                      medium={item.medium}
+                      style={item.style}
+                      dimensions={item.dimensions}
+                      price={item.price}
+                      imageUrls={item.image_urls}
+                      isFeatured={item.is_featured}
+                      onView={handleArtworkView}
+                      onPurchase={handleArtworkPurchase}
+                    />
+                  ))}
+                </div>
               )}
 
               <div className="text-center mt-8">
