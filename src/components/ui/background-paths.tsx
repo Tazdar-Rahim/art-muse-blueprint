@@ -71,7 +71,7 @@ export function BackgroundPaths({
                     transition={{ duration: 2 }}
                     className="text-center"
                 >
-                    <h1 className="font-handwritten text-6xl sm:text-8xl md:text-9xl font-bold tracking-wide transform rotate-[-2deg]">
+                    <h1 className="font-handwritten text-4xl sm:text-5xl md:text-6xl font-bold tracking-wide transform rotate-[-2deg]">
                         {words.map((word, wordIndex) => (
                             <span
                                 key={wordIndex}

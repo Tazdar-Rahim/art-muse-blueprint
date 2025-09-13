@@ -11,7 +11,7 @@ const HeroSection = ({
   onStartCommission
 }: HeroSectionProps) => {
   return <div className="relative">
-      <BackgroundPaths title="Farhana Art" />
+      <BackgroundPaths title="Farhana's Art studio" />
       
       {/* Main content with proper hierarchy */}
       <div className="absolute inset-0 flex items-center justify-center pt-40">
@@ -34,13 +34,6 @@ const HeroSection = ({
             </div>
           </div>
 
-          {/* Subtitle */}
-          <div className="mb-8 transform rotate-[1deg]">
-            <p className="font-handwritten text-3xl md:text-4xl text-primary font-bold">
-              Visual Artist & Creative Soul
-            </p>
-            <div className="w-32 h-1 bg-primary/30 mx-auto mt-2 rounded-full transform rotate-[-1deg]"></div>
-          </div>
 
           {/* Artist description */}
           <div className="mb-12 transform rotate-[-0.5deg]">
