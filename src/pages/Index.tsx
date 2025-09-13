@@ -271,7 +271,7 @@ const Index = () => {
                   <div className="flex gap-4">
                     <Button variant="ghost" size="sm" className="w-12 h-12 p-0" asChild>
                       <a 
-                        href="https://www.instagram.com/farhana_shaheen_art?utm_source=ig_web_button_share_sheet&igsh=MWl2MTB6dmo0Mmg5Yw==" 
+                        href="https://www.instagram.com/farhana_shaheen_art/" 
                         target="_blank" 
                         rel="noopener noreferrer"
                       >
