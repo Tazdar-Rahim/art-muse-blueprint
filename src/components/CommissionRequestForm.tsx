@@ -184,7 +184,7 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                   <SelectValue placeholder="Select a commission package or leave blank for custom" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Custom Commission</SelectItem>
+                  <SelectItem value="custom">Custom Commission</SelectItem>
                   {/* These would be dynamically loaded */}
                   <SelectItem value="portrait-basic">Portrait Package - Basic (₹12,500)</SelectItem>
                   <SelectItem value="portrait-premium">Portrait Package - Premium (₹25,000)</SelectItem>
