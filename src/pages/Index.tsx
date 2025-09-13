@@ -208,16 +208,6 @@ const Index = () => {
                   {packages?.map(pkg => <CommissionPackageCard key={pkg.id} id={pkg.id} name={pkg.name} description={pkg.description} basePrice={pkg.base_price} category={pkg.category} style={pkg.style} includes={pkg.includes} turnaroundDays={pkg.turnaround_days} imageUrl={pkg.image_url} onSelect={handlePackageSelect} />)}
                 </div>}
             </section>
-
-            {/* Commission Form */}
-            <section>
-              <CommissionRequestForm selectedPackageId={selectedPackageId} onSuccess={() => {
-              toast({
-                title: "Success!",
-                description: "Your commission request has been submitted."
-              });
-            }} />
-            </section>
           </div>;
       case "consultation":
         return <div className="container mx-auto px-4 pt-24 pb-16">
