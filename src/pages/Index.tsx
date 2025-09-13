@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 
 import ArtworkCard from "@/components/ArtworkCard";
+import ArtworkCarousel3D from "@/components/ArtworkCarousel3D";
 import CommissionPackageCard from "@/components/CommissionPackageCard";
 import CommissionRequestForm from "@/components/CommissionRequestForm";
 import ConsultationBooking from "@/components/ConsultationBooking";
@@ -117,31 +118,21 @@ const Index = () => {
               </div>
 
               {artworkLoading ? (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[1, 2, 3].map(i => (
-                    <Card key={i} className="h-80 animate-pulse bg-muted" />
-                  ))}
+                <div className="flex justify-center items-center h-96">
+                  <div className="animate-pulse space-y-4">
+                    <Card className="w-72 h-80 bg-muted" />
+                    <div className="flex gap-4 justify-center">
+                      <div className="w-12 h-12 bg-muted rounded-full" />
+                      <div className="w-12 h-12 bg-muted rounded-full" />
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {artwork?.filter(item => item.is_featured).slice(0, 6).map((item) => (
-                    <ArtworkCard
-                      key={item.id}
-                      id={item.id}
-                      title={item.title}
-                      description={item.description}
-                      category={item.category}
-                      medium={item.medium}
-                      style={item.style}
-                      dimensions={item.dimensions}
-                      price={item.price}
-                      imageUrls={item.image_urls}
-                      isFeatured={item.is_featured}
-                      onView={handleArtworkView}
-                      onPurchase={handleArtworkPurchase}
-                    />
-                  ))}
-                </div>
+                <ArtworkCarousel3D
+                  artworks={artwork?.filter(item => item.is_featured).slice(0, 6) || []}
+                  onView={handleArtworkView}
+                  onPurchase={handleArtworkPurchase}
+                />
               )}
 
               <div className="text-center mt-8">
