@@ -269,8 +269,14 @@ const Index = () => {
                 <div className="border-t border-border pt-6">
                   <h3 className="font-semibold mb-4">Follow My Art Journey</h3>
                   <div className="flex gap-4">
-                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
-                      <Instagram className="w-5 h-5" />
+                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0" asChild>
+                      <a 
+                        href="https://www.instagram.com/farhana_shaheen_art?utm_source=ig_web_button_share_sheet&igsh=MWl2MTB6dmo0Mmg5Yw==" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        <Instagram className="w-5 h-5" />
+                      </a>
                     </Button>
                     <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
                       <Facebook className="w-5 h-5" />
