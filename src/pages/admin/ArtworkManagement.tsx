@@ -6,9 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { FileUpload } from '@/components/ui/file-upload';
+import { AddFeaturedArtworks } from '@/components/AddFeaturedArtworks';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { uploadMultipleFiles } from '@/lib/storage';
+import { Plus, Edit, Trash2, Image } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface Artwork {
@@ -29,6 +32,8 @@ const ArtworkManagement = () => {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -37,7 +42,7 @@ const ArtworkManagement = () => {
     style: '',
     price: '',
     dimensions: '',
-    image_urls: '',
+    image_urls: [] as string[],
     is_featured: false,
     is_available: true,
   });
@@ -66,11 +71,42 @@ const ArtworkManagement = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsUploading(true);
     
-    const imageUrls = formData.image_urls
-      .split(',')
-      .map(url => url.trim())
-      .filter(url => url.length > 0);
+    let imageUrls = [...formData.image_urls];
+
+    // Upload new files if any
+    if (uploadedFiles.length > 0) {
+      try {
+        const uploadResults = await uploadMultipleFiles(
+          uploadedFiles,
+          'artwork-images',
+          `artwork-${Date.now()}`
+        );
+
+        const successfulUploads = uploadResults.filter(result => !result.error);
+        const failedUploads = uploadResults.filter(result => result.error);
+
+        if (failedUploads.length > 0) {
+          toast({
+            title: 'Partial Upload Error',
+            description: `${failedUploads.length} image(s) failed to upload`,
+            variant: 'destructive',
+          });
+        }
+
+        // Add successful upload URLs
+        imageUrls = [...imageUrls, ...successfulUploads.map(result => result.url)];
+      } catch (error) {
+        toast({
+          title: 'Upload Error',
+          description: 'Failed to upload images',
+          variant: 'destructive',
+        });
+        setIsUploading(false);
+        return;
+      }
+    }
 
     const artworkData = {
       title: formData.title,
@@ -96,6 +132,8 @@ const ArtworkManagement = () => {
         .from('artwork')
         .insert([artworkData]);
     }
+
+    setIsUploading(false);
 
     if (result.error) {
       toast({
@@ -124,10 +162,11 @@ const ArtworkManagement = () => {
       style: artwork.style || '',
       price: artwork.price?.toString() || '',
       dimensions: artwork.dimensions || '',
-      image_urls: artwork.image_urls?.join(', ') || '',
+      image_urls: artwork.image_urls || [],
       is_featured: artwork.is_featured || false,
       is_available: artwork.is_available !== false,
     });
+    setUploadedFiles([]);
     setIsDialogOpen(true);
   };
 
@@ -161,10 +200,11 @@ const ArtworkManagement = () => {
       style: '',
       price: '',
       dimensions: '',
-      image_urls: '',
+      image_urls: [],
       is_featured: false,
       is_available: true,
     });
+    setUploadedFiles([]);
     setEditingArtwork(null);
   };
 
@@ -291,14 +331,18 @@ const ArtworkManagement = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="image_urls">Image URLs (comma-separated)</Label>
-                <Textarea
-                  id="image_urls"
-                  value={formData.image_urls}
-                  onChange={(e) => setFormData({...formData, image_urls: e.target.value})}
-                  placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
-                  rows={2}
+                <Label htmlFor="image_upload">Images</Label>
+                <FileUpload
+                  onFilesChange={setUploadedFiles}
+                  onUrlsChange={(urls) => setFormData({...formData, image_urls: urls})}
+                  existingUrls={formData.image_urls}
+                  maxFiles={5}
                 />
+                {formData.image_urls.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    {formData.image_urls.length} image(s) selected
+                  </p>
+                )}
               </div>
 
               <div className="flex gap-6">
@@ -322,10 +366,10 @@ const ArtworkManagement = () => {
               </div>
 
               <div className="flex gap-2 pt-4">
-                <Button type="submit" className="flex-1">
-                  {editingArtwork ? 'Update' : 'Create'} Artwork
+                <Button type="submit" className="flex-1" disabled={isUploading}>
+                  {isUploading ? 'Uploading...' : (editingArtwork ? 'Update' : 'Create')} Artwork
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isUploading}>
                   Cancel
                 </Button>
               </div>
@@ -333,6 +377,13 @@ const ArtworkManagement = () => {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Add Featured Artworks Component */}
+      {artworks.length === 0 && (
+        <div className="flex justify-center">
+          <AddFeaturedArtworks />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {artworks.map((artwork) => (
@@ -342,6 +393,23 @@ const ArtworkManagement = () => {
               <CardDescription>{artwork.category}</CardDescription>
             </CardHeader>
             <CardContent>
+              {artwork.image_urls && artwork.image_urls.length > 0 && (
+                <div className="mb-4">
+                  <img
+                    src={artwork.image_urls[0]}
+                    alt={artwork.title}
+                    className="w-full h-32 object-cover rounded-md"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  {artwork.image_urls.length > 1 && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      +{artwork.image_urls.length - 1} more image(s)
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="space-y-2">
                 {artwork.price && (
                   <p className="text-xl font-bold text-amber-600">₹{artwork.price}</p>
