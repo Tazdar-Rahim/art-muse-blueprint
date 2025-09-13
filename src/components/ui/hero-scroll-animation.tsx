@@ -10,7 +10,21 @@ const Section1: React.FC<SectionProps> = ({
 }) => {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
   const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
-  return;
+  
+  return (
+    <motion.section 
+      style={{ scale, rotate }} 
+      className='relative h-screen bg-gradient-to-b from-primary/20 to-background text-foreground'
+    >
+      <div className='absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]'></div>
+      <div className='container mx-auto relative z-10 h-full flex items-center justify-center'>
+        <div className='text-center'>
+          <h1 className='text-6xl font-bold mb-4'>First Section</h1>
+          <p className='text-xl opacity-80'>Scroll down to see the animation</p>
+        </div>
+      </div>
+    </motion.section>
+  );
 };
 const Section2: React.FC<SectionProps> = ({
   scrollYProgress
@@ -41,9 +55,13 @@ const HeroScrollAnimation = forwardRef<HTMLElement>((props, ref) => {
     target: container,
     offset: ['start start', 'end end']
   });
-  return <>
-      
-    </>;
+  
+  return (
+    <div ref={container} className="relative">
+      <Section1 scrollYProgress={scrollYProgress} />
+      <Section2 scrollYProgress={scrollYProgress} />
+    </div>
+  );
 });
 HeroScrollAnimation.displayName = 'HeroScrollAnimation';
 export default HeroScrollAnimation;
