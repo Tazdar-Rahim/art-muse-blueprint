@@ -58,20 +58,20 @@ export function BackgroundPaths({
     const words = title.split(" ");
 
     return (
-        <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-white dark:bg-neutral-950">
+        <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-amber-50 to-blue-50 dark:from-neutral-950 dark:to-neutral-900">
             <div className="absolute inset-0">
                 <FloatingPaths position={1} />
                 <FloatingPaths position={-1} />
             </div>
 
-            <div className="relative z-10 container mx-auto px-4 md:px-6 text-center">
+            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-0">
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 0.6, scale: 1 }}
                     transition={{ duration: 2 }}
-                    className="max-w-4xl mx-auto"
+                    className="text-center"
                 >
-                    <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold mb-8 tracking-tighter">
+                    <h1 className="font-handwritten text-6xl sm:text-8xl md:text-9xl font-bold tracking-wide transform rotate-[-2deg]">
                         {words.map((word, wordIndex) => (
                             <span
                                 key={wordIndex}
@@ -91,7 +91,7 @@ export function BackgroundPaths({
                                             damping: 25,
                                         }}
                                         className="inline-block text-transparent bg-clip-text 
-                                        bg-gradient-to-r from-neutral-900 to-neutral-700/80 
+                                        bg-gradient-to-r from-primary to-primary/70 
                                         dark:from-white dark:to-white/80"
                                     >
                                         {letter}
@@ -100,31 +100,6 @@ export function BackgroundPaths({
                             </span>
                         ))}
                     </h1>
-
-                    <div
-                        className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 
-                        dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg 
-                        overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    >
-                        <Button
-                            variant="ghost"
-                            className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md 
-                            bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 
-                            text-black dark:text-white transition-all duration-300 
-                            group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10
-                            hover:shadow-md dark:hover:shadow-neutral-800/50"
-                        >
-                            <span className="opacity-90 group-hover:opacity-100 transition-opacity">
-                                Discover Excellence
-                            </span>
-                            <span
-                                className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 
-                                transition-all duration-300"
-                            >
-                                →
-                            </span>
-                        </Button>
-                    </div>
                 </motion.div>
             </div>
         </div>
