@@ -472,35 +472,9 @@ const Index = () => {
       {renderContent()}
     </div>
   );
-      />
-      
-      {renderContent()}
-    </div>
-  );
+};
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Navigation 
-        activeSection={activeSection} 
-        onNavigate={setActiveSection}
-      />
-      
-      <main>
-        {renderContent()}
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-card border-t border-border py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-                <Palette className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-card-foreground">Farhana Art Studio</h3>
-                <p className="text-sm text-muted-foreground">Creating beauty, one brushstroke at a time</p>
-              </div>
+export default Index;
             </div>
             
             <div className="flex justify-center gap-6 text-sm text-muted-foreground">
@@ -510,23 +484,5 @@ const Index = () => {
               <span>•</span>
               <span>Custom art with love</span>
             </div>
-
-            <div className="flex justify-center gap-4">
-              <Button variant="ghost" size="sm">
-                <Instagram className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Facebook className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Twitter className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
 
 export default Index;
