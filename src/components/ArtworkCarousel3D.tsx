@@ -79,12 +79,12 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
 
   return (
     <div className="relative w-full">
-      {/* 3D Carousel Container */}
+      {/* Mobile-Enhanced 3D Carousel Container */}
       <div 
         ref={carouselRef}
-        className="relative h-96 overflow-visible mx-auto"
+        className="relative h-80 sm:h-96 overflow-visible mx-auto mobile-padding"
         style={{ 
-          perspective: "1000px",
+          perspective: "800px",
           perspectiveOrigin: "center center"
         }}
       >
@@ -98,11 +98,12 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                 opacity: getCardOpacity(index),
                 zIndex: getCardZIndex(index),
                 transformStyle: "preserve-3d",
-                width: "320px", // Made cards bigger
+                width: "280px", // Smaller for mobile
+                maxWidth: "90vw", // Responsive width
               }}
             >
-              {/* Bigger cards with save button */}
-              <div className="transform scale-90 origin-center">
+              {/* Mobile-Optimized Cards */}
+              <div className="transform scale-75 sm:scale-90 origin-center">
                 <div className="relative">
                   <ArtworkCard
                     id={artwork.id}
@@ -118,7 +119,7 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                     onView={onView}
                     onPurchase={onPurchase}
                   />
-                  {/* Save Me Button */}
+                  {/* Mobile-Enhanced Save Button */}
                   <Button
                     size="sm"
                     variant={isInWishlist(artwork.id) ? "default" : "outline"}
@@ -129,9 +130,9 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                       imageUrl: artwork.image_urls?.[0],
                       category: artwork.category,
                     })}
-                    className="absolute top-3 right-3 z-10 font-handwritten border-2 border-foreground shadow-[2px_2px_0px_0px] shadow-foreground hover:shadow-[3px_3px_0px_0px] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all duration-200"
+                    className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10 font-handwritten border-2 border-foreground mobile-shadow shadow-foreground mobile-hover-shadow transition-all duration-200 touch-target touch-interaction"
                   >
-                    <Heart className={`w-4 h-4 ${isInWishlist(artwork.id) ? 'fill-current' : ''}`} />
+                    <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${isInWishlist(artwork.id) ? 'fill-current' : ''}`} />
                   </Button>
                 </div>
               </div>
@@ -140,27 +141,27 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
         </div>
       </div>
 
-      {/* Handwritten Style Navigation Arrows */}
-      <div className="flex justify-center items-center gap-8 mt-8">
+      {/* Mobile-Enhanced Navigation Controls */}
+      <div className="flex justify-center items-center gap-4 sm:gap-8 mt-6 sm:mt-8 mobile-padding">
         <Button
           onClick={handlePrevious}
           disabled={isTransitioning}
-          className="group relative p-0 w-12 h-12 bg-paper-white dark:bg-muted border-2 border-foreground rounded-full shadow-[3px_3px_0px_0px] shadow-foreground hover:shadow-[5px_5px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 font-handwritten"
+          className="group relative p-0 w-10 h-10 sm:w-12 sm:h-12 bg-paper-white dark:bg-muted border-2 border-foreground rounded-full mobile-shadow shadow-foreground mobile-hover-shadow transition-all duration-200 font-handwritten touch-target touch-interaction"
         >
-          <ChevronLeft className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
-          {/* Handwritten style decoration */}
-          <div className="absolute -bottom-1 -right-1 w-3 h-3 border-2 border-foreground rounded-full bg-crayon-yellow opacity-80 group-hover:opacity-100 transition-opacity" />
+          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-foreground group-hover:text-primary transition-colors" />
+          {/* Mobile-friendly decoration */}
+          <div className="absolute -bottom-0.5 sm:-bottom-1 -right-0.5 sm:-right-1 w-2 h-2 sm:w-3 sm:h-3 border-2 border-foreground rounded-full bg-crayon-yellow opacity-80 group-hover:opacity-100 transition-opacity" />
         </Button>
 
-        {/* Carousel indicators */}
-        <div className="flex gap-2">
+        {/* Mobile-Optimized Indicators */}
+        <div className="flex gap-1.5 sm:gap-2">
           {artworks.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full border border-foreground transition-all duration-200 font-handwritten ${
+              className={`w-2 h-2 rounded-full border border-foreground transition-all duration-200 font-handwritten touch-target ${
                 index === currentIndex 
-                  ? 'bg-primary scale-125' 
+                  ? 'bg-primary scale-110 sm:scale-125' 
                   : 'bg-muted hover:bg-accent'
               }`}
             />
@@ -170,11 +171,11 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
         <Button
           onClick={handleNext}
           disabled={isTransitioning}
-          className="group relative p-0 w-12 h-12 bg-paper-white dark:bg-muted border-2 border-foreground rounded-full shadow-[3px_3px_0px_0px] shadow-foreground hover:shadow-[5px_5px_0px_0px] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200 font-handwritten"
+          className="group relative p-0 w-10 h-10 sm:w-12 sm:h-12 bg-paper-white dark:bg-muted border-2 border-foreground rounded-full mobile-shadow shadow-foreground mobile-hover-shadow transition-all duration-200 font-handwritten touch-target touch-interaction"
         >
-          <ChevronRight className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
-          {/* Handwritten style decoration */}
-          <div className="absolute -bottom-1 -left-1 w-3 h-3 border-2 border-foreground rounded-full bg-crayon-pink opacity-80 group-hover:opacity-100 transition-opacity" />
+          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-foreground group-hover:text-primary transition-colors" />
+          {/* Mobile-friendly decoration */}
+          <div className="absolute -bottom-0.5 sm:-bottom-1 -left-0.5 sm:-left-1 w-2 h-2 sm:w-3 sm:h-3 border-2 border-foreground rounded-full bg-crayon-pink opacity-80 group-hover:opacity-100 transition-opacity" />
         </Button>
       </div>
 

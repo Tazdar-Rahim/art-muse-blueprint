@@ -139,4 +139,61 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Mobile-optimized touch targets */
+  @media (max-width: 768px) {
+    button, 
+    [role="button"],
+    input[type="button"],
+    input[type="submit"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  /* Mobile-first responsive utilities */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .mobile-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-text {
+    @apply text-sm sm:text-base;
+  }
+  
+  .mobile-heading {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+  
+  .mobile-card-padding {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+
+  /* Enhanced touch interactions */
+  .touch-interaction {
+    @apply transition-all duration-200 ease-out active:scale-95 active:brightness-95;
+  }
+  
+  .mobile-shadow {
+    @apply shadow-[2px_2px_0px_0px] sm:shadow-[4px_4px_0px_0px];
+  }
+  
+  .mobile-hover-shadow {
+    @apply hover:shadow-[3px_3px_0px_0px] sm:hover:shadow-[6px_6px_0px_0px] hover:translate-x-[-1px] hover:translate-y-[-1px] sm:hover:translate-x-[-2px] sm:hover:translate-y-[-2px];
+  }
 }

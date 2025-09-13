@@ -7,10 +7,26 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem", 
+        lg: "2rem",
+      },
       screens: {
+        sm: "640px",
+        md: "768px", 
+        lg: "1024px",
+        xl: "1280px",
         "2xl": "1400px",
       },
+    },
+    screens: {
+      xs: "480px",
+      sm: "640px", 
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px", 
+      "2xl": "1536px",
     },
     extend: {
       fontFamily: {
@@ -90,8 +106,13 @@ export default {
       },
       animation: {
         'float': 'float 3s ease-in-out infinite',
+        'float-slow': 'float 6s ease-in-out infinite',
         'fade-in': 'fadeIn 0.6s ease-out',
+        'fade-in-mobile': 'fadeInMobile 0.4s ease-out',
         'scale-in': 'scaleIn 0.4s ease-out',
+        'scale-in-mobile': 'scaleInMobile 0.3s ease-out',
+        'slide-up': 'slideUp 0.5s ease-out',
+        'pulse-gentle': 'pulseGentle 2s ease-in-out infinite',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
@@ -104,9 +125,25 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        fadeInMobile: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         scaleIn: {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        scaleInMobile: {
+          '0%': { opacity: '0', transform: 'scale(0.98)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseGentle: {
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.02)', opacity: '0.9' },
         },
         "accordion-down": {
           from: {
