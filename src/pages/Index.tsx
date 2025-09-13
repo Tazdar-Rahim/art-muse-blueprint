@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Search, Filter, Palette, Mail, Phone, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
 const Index = () => {
@@ -20,6 +21,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
+  const [isCommissionFormOpen, setIsCommissionFormOpen] = useState(false);
   const {
     toast
   } = useToast();
@@ -80,10 +82,10 @@ const Index = () => {
   };
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackageId(packageId);
-    setActiveSection("commission");
+    setIsCommissionFormOpen(true);
     toast({
       title: "Package Selected",
-      description: "Commission form loaded with your selected package."
+      description: "Commission form opened with your selected package."
     });
   };
   const renderContent = () => {
@@ -329,6 +331,25 @@ const Index = () => {
       <Navigation activeSection={activeSection} onNavigate={setActiveSection} />
       
       {renderContent()}
+      
+      {/* Commission Form Dialog */}
+      <Dialog open={isCommissionFormOpen} onOpenChange={setIsCommissionFormOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Commission Request</DialogTitle>
+          </DialogHeader>
+          <CommissionRequestForm 
+            selectedPackageId={selectedPackageId} 
+            onSuccess={() => {
+              setIsCommissionFormOpen(false);
+              toast({
+                title: "Success!",
+                description: "Your commission request has been submitted."
+              });
+            }} 
+          />
+        </DialogContent>
+      </Dialog>
     </div>;
 };
 export default Index;
