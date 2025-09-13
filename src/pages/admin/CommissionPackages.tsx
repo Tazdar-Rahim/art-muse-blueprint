@@ -74,7 +74,7 @@ const CommissionPackages = () => {
       name: formData.name,
       description: formData.description,
       category: formData.category as 'original_painting' | 'digital_art' | 'print' | 'illustration',
-      style: formData.style || null,
+      style: formData.style as 'portrait' | 'landscape' | 'abstract' | 'still_life' | 'contemporary' | 'realism' | null,
       base_price: parseFloat(formData.base_price),
       turnaround_days: formData.turnaround_days ? parseInt(formData.turnaround_days) : null,
       includes: includes.length > 0 ? includes : null,

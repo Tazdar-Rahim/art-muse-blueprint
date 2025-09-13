@@ -466,23 +466,12 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navigation 
         activeSection={activeSection}
-        onSectionChange={setActiveSection}
+        onNavigate={setActiveSection}
       />
       
       {renderContent()}
     </div>
   );
 };
-
-export default Index;
-            </div>
-            
-            <div className="flex justify-center gap-6 text-sm text-muted-foreground">
-              <span>© 2024 Farhana Art Studio</span>
-              <span>•</span>
-              <span>All rights reserved</span>
-              <span>•</span>
-              <span>Custom art with love</span>
-            </div>
 
 export default Index;
