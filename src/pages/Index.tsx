@@ -5,7 +5,6 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 
 import ArtworkCard from "@/components/ArtworkCard";
-import { ArtworkCarousel } from "@/components/ui/artwork-carousel";
 import CommissionPackageCard from "@/components/CommissionPackageCard";
 import CommissionRequestForm from "@/components/CommissionRequestForm";
 import ConsultationBooking from "@/components/ConsultationBooking";
@@ -118,21 +117,31 @@ const Index = () => {
               </div>
 
               {artworkLoading ? (
-                <div className="flex justify-center items-center h-96">
-                  <div className="animate-pulse text-muted-foreground">Loading featured artworks...</div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3].map(i => (
+                    <Card key={i} className="h-80 animate-pulse bg-muted" />
+                  ))}
                 </div>
               ) : (
-                <ArtworkCarousel
-                  slides={artwork?.filter(item => item.is_featured).slice(0, 6).map(item => ({
-                    id: item.id,
-                    title: item.title,
-                    price: item.price,
-                    imageUrl: item.image_urls?.[0] || '/placeholder.svg',
-                    category: item.category
-                  })) || []}
-                  onView={handleArtworkView}
-                  onPurchase={handleArtworkPurchase}
-                />
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {artwork?.filter(item => item.is_featured).slice(0, 6).map((item) => (
+                    <ArtworkCard
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      description={item.description}
+                      category={item.category}
+                      medium={item.medium}
+                      style={item.style}
+                      dimensions={item.dimensions}
+                      price={item.price}
+                      imageUrls={item.image_urls}
+                      isFeatured={item.is_featured}
+                      onView={handleArtworkView}
+                      onPurchase={handleArtworkPurchase}
+                    />
+                  ))}
+                </div>
               )}
 
               <div className="text-center mt-8">
