@@ -27,7 +27,6 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
     { id: "gallery", label: "Gallery", icon: Image },
     { id: "commission", label: "Commission", icon: Palette },
     { id: "consultation", label: "Consultation", icon: MessageSquare },
-    { id: "shop", label: "Shop", icon: ShoppingBag },
     { id: "contact", label: "Contact", icon: Phone },
     { id: "cart", label: "My Cart", icon: ShoppingCart },
     { id: "wishlist", label: "Wishlist", icon: Heart }
@@ -76,9 +75,9 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-400 border-2 border-zinc-900 dark:border-white rounded-full flex items-center justify-center mobile-shadow shadow-zinc-900 dark:shadow-white rotate-[5deg]">
                     <Palette className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-900" />
                   </div>
-                  <div className="relative">
-                    <h2 className="text-xl sm:text-2xl font-bold font-handwritten text-zinc-900 dark:text-white rotate-[-1deg]">Farhana</h2>
-                    <p className="text-sm font-handwritten text-zinc-600 dark:text-zinc-400 rotate-[1deg]">Art Studio ✨</p>
+                  <div className="relative bg-amber-400/80 px-3 py-2 rounded-lg border-2 border-zinc-900 dark:border-white mobile-shadow shadow-zinc-900 dark:shadow-white">
+                    <h2 className="text-xl sm:text-2xl font-bold font-handwritten text-zinc-900 rotate-[-1deg]">Farhana</h2>
+                    <p className="text-sm font-handwritten text-zinc-700 rotate-[1deg]">Art Studio ✨</p>
                   </div>
                 </div>
 
@@ -116,13 +115,6 @@ const Navigation = ({ activeSection, onNavigate }: NavigationProps) => {
                       </div>
                     );
                   })}
-                </div>
-
-                {/* Mobile Featured */}
-                <div className="mt-auto pb-6 relative rotate-[1deg]">
-                  <div className="w-full text-center py-3 bg-blue-500/20 text-blue-700 dark:text-blue-300 border-2 border-blue-500 rounded-lg font-handwritten shadow-[2px_2px_0px_0px] shadow-blue-500">
-                    ✨ Custom Art Available
-                  </div>
                 </div>
               </div>
             </SheetContent>
