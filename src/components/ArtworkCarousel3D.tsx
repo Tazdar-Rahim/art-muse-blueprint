@@ -153,21 +153,6 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
           <div className="absolute -bottom-0.5 sm:-bottom-1 -right-0.5 sm:-right-1 w-2 h-2 sm:w-3 sm:h-3 border-2 border-foreground rounded-full bg-crayon-yellow opacity-80 group-hover:opacity-100 transition-opacity" />
         </Button>
 
-        {/* Mobile-Optimized Indicators */}
-        <div className="flex gap-1.5 sm:gap-2">
-          {artworks.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-1 h-1 rounded-full border border-foreground transition-all duration-200 font-handwritten touch-target ${
-                index === currentIndex 
-                  ? 'bg-primary scale-110 sm:scale-125' 
-                  : 'bg-muted hover:bg-accent'
-              }`}
-            />
-          ))}
-        </div>
-
         <Button
           onClick={handleNext}
           disabled={isTransitioning}
