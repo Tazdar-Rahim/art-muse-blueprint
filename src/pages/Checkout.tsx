@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCartWishlist } from '@/contexts/CartWishlistContext';
-import { ArrowLeft, CreditCard, Lock } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { resolveArtworkImages } from '@/lib/artwork-images';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -25,12 +27,6 @@ const Checkout = () => {
     city: '',
     state: '',
     pincode: '',
-    
-    // Payment Information
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardName: '',
     
     // Additional
     notes: ''
@@ -65,10 +61,10 @@ const Checkout = () => {
       return;
     }
 
-    if (!formData.cardNumber || !formData.expiryDate || !formData.cvv || !formData.cardName) {
+    if (cartItems.length === 0) {
       toast({
-        title: "Missing Payment Info",
-        description: "Please fill in all payment details",
+        title: "Empty Cart",
+        description: "Please add items to your cart before checkout",
         variant: "destructive"
       });
       return;
@@ -76,16 +72,64 @@ const Checkout = () => {
 
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
-      clearCart();
-      setIsProcessing(false);
-      toast({
-        title: "Order Successful! 🎉",
-        description: "Your artwork order has been placed successfully. You'll receive a confirmation email shortly.",
+    try {
+      // Create order in database
+      const shippingAddress = {
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode
+      };
+
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          customer_name: `${formData.firstName} ${formData.lastName}`,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          shipping_address: shippingAddress,
+          total_amount: getCartTotal(),
+          payment_status: 'pending',
+          order_status: 'pending',
+          notes: formData.notes || null
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Create order items
+      const orderItems = cartItems.map(item => {
+        const resolvedImages = resolveArtworkImages([item.imageUrl || '']);
+        return {
+          order_id: order.id,
+          artwork_id: item.id,
+          artwork_title: item.title,
+          artwork_image_url: resolvedImages[0],
+          artwork_category: item.category,
+          price: item.price,
+          quantity: item.quantity
+        };
       });
-      navigate('/order-success');
-    }, 2000);
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      // Navigate to payment page
+      navigate(`/payment/${order.id}`);
+    } catch (error) {
+      console.error('Error creating order:', error);
+      toast({
+        title: "Order Failed",
+        description: "Failed to create order. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (cartItems.length === 0) {
@@ -238,67 +282,6 @@ const Checkout = () => {
                 </CardContent>
               </Card>
 
-              {/* Payment Information */}
-              <Card className="border-2 border-foreground mobile-shadow shadow-foreground">
-                <CardHeader>
-                  <CardTitle className="font-handwritten flex items-center gap-2 mobile-text">
-                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Payment Information
-                    <Lock className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 sm:space-y-4">
-                  <div>
-                    <Label htmlFor="cardName" className="font-handwritten mobile-text">Cardholder Name *</Label>
-                    <Input
-                      id="cardName"
-                      name="cardName"
-                      value={formData.cardName}
-                      onChange={handleInputChange}
-                      className="font-handwritten touch-target"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="cardNumber" className="font-handwritten mobile-text">Card Number *</Label>
-                    <Input
-                      id="cardNumber"
-                      name="cardNumber"
-                      placeholder="1234 5678 9012 3456"
-                      value={formData.cardNumber}
-                      onChange={handleInputChange}
-                      className="font-handwritten touch-target"
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                      <Label htmlFor="expiryDate" className="font-handwritten mobile-text">Expiry Date *</Label>
-                      <Input
-                        id="expiryDate"
-                        name="expiryDate"
-                        placeholder="MM/YY"
-                        value={formData.expiryDate}
-                        onChange={handleInputChange}
-                        className="font-handwritten touch-target"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="cvv" className="font-handwritten mobile-text">CVV *</Label>
-                      <Input
-                        id="cvv"
-                        name="cvv"
-                        placeholder="123"
-                        value={formData.cvv}
-                        onChange={handleInputChange}
-                        className="font-handwritten touch-target"
-                        required
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
               {/* Additional Notes */}
               <Card className="border-2 border-foreground mobile-shadow shadow-foreground">
@@ -362,11 +345,11 @@ const Checkout = () => {
                     disabled={isProcessing}
                     className="w-full font-handwritten border-2 border-foreground mobile-shadow shadow-foreground mobile-hover-shadow touch-target touch-interaction"
                   >
-                    {isProcessing ? 'Processing...' : 'Complete Order'}
+                    {isProcessing ? 'Creating Order...' : 'Continue to Payment'}
                   </Button>
                   
                   <p className="text-xs text-muted-foreground text-center font-handwritten">
-                    🔒 Your payment information is secure and encrypted
+                    🔒 Secure checkout process
                   </p>
                 </CardContent>
               </Card>

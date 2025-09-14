@@ -11,6 +11,7 @@ import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import Payment from "./pages/Payment";
 import AdminLayout from "./components/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import ArtworkManagement from "./pages/admin/ArtworkManagement";
@@ -41,8 +42,9 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment/:orderId" element={<Payment />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="artwork" element={<ArtworkManagement />} />

@@ -205,6 +205,92 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          artwork_category: string
+          artwork_id: string
+          artwork_image_url: string | null
+          artwork_title: string
+          created_at: string
+          id: string
+          order_id: string
+          price: number
+          quantity: number
+        }
+        Insert: {
+          artwork_category: string
+          artwork_id: string
+          artwork_image_url?: string | null
+          artwork_title: string
+          created_at?: string
+          id?: string
+          order_id: string
+          price: number
+          quantity?: number
+        }
+        Update: {
+          artwork_category?: string
+          artwork_id?: string
+          artwork_image_url?: string | null
+          artwork_title?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          price?: number
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          notes: string | null
+          order_status: string | null
+          payment_status: string | null
+          shipping_address: Json
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          order_status?: string | null
+          payment_status?: string | null
+          shipping_address: Json
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          order_status?: string | null
+          payment_status?: string | null
+          shipping_address?: Json
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
