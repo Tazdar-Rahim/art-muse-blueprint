@@ -18,6 +18,7 @@ import CommissionPackages from "./pages/admin/CommissionPackages";
 import CommissionRequests from "./pages/admin/CommissionRequests";
 import ConsultationBookings from "./pages/admin/ConsultationBookings";
 import NotFound from "./pages/NotFound";
+import AboutCEO from "./pages/AboutCEO";
 import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
                 <Route path="requests" element={<CommissionRequests />} />
                 <Route path="bookings" element={<ConsultationBookings />} />
               </Route>
+              <Route path="/about-ceo" element={<AboutCEO />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

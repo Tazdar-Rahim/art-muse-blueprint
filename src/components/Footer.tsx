@@ -59,6 +59,11 @@ const Footer = () => {
                   Consultation
                 </Link>
               </li>
+              <li>
+                <Link to="/about-ceo" className="text-muted-foreground hover:text-primary transition-colors">
+                  About the C.E.O
+                </Link>
+              </li>
             </ul>
           </div>
 
