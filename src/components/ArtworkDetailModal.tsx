@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Heart, X } from "lucide-react";
 import { useCartWishlist } from "@/contexts/CartWishlistContext";
+import { resolveArtworkImages } from "@/lib/artwork-images";
 
 interface ArtworkDetailModalProps {
   isOpen: boolean;
@@ -27,13 +28,16 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
 
   if (!artwork) return null;
 
+  const resolvedImages = resolveArtworkImages(artwork.image_urls);
+  const imageUrl = resolvedImages[0] || '/placeholder.svg';
+
   const handleAddToCart = () => {
     if (artwork.price) {
       addToCart({
         id: artwork.id,
         title: artwork.title,
         price: artwork.price,
-        imageUrl: artwork.image_urls?.[0],
+        imageUrl: resolvedImages[0],
         category: artwork.category,
       });
     }
@@ -44,7 +48,7 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
       id: artwork.id,
       title: artwork.title,
       price: artwork.price,
-      imageUrl: artwork.image_urls?.[0],
+      imageUrl: resolvedImages[0],
       category: artwork.category,
     });
   };
@@ -56,7 +60,7 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
           {/* Image Section */}
           <div className="relative">
             <img
-              src={artwork.image_urls?.[0] || '/placeholder.svg'}
+              src={imageUrl}
               alt={artwork.title}
               className="w-full h-64 md:h-full object-cover"
             />
