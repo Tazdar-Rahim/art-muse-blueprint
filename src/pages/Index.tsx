@@ -272,27 +272,33 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gallery-gold/20 rounded-full flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-gallery-gold" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">Studio Location</h3>
-                      <p className="text-muted-foreground">Available for consultation calls</p>
-                    </div>
-                  </div>
                 </div>
 
                 <div className="border-t border-border pt-6">
                   <h3 className="font-semibold mb-4">Follow My Art Journey</h3>
                   <div className="flex gap-4">
-                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-12 h-12 p-0"
+                      onClick={() => window.open('https://www.instagram.com/farhana_shaheen_art/', '_blank')}
+                    >
                       <Instagram className="w-5 h-5" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-12 h-12 p-0"
+                      onClick={() => window.open('https://www.facebook.com/share/19zVWX9f5r/?mibextid=wwXIfr', '_blank')}
+                    >
                       <Facebook className="w-5 h-5" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="w-12 h-12 p-0">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-12 h-12 p-0"
+                      onClick={() => window.open('https://x.com/artfarhana?s=21&t=djUD1U48Upbdby2Db2YY-w', '_blank')}
+                    >
                       <Twitter className="w-5 h-5" />
                     </Button>
                   </div>
