@@ -2,7 +2,15 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  safelist: [
+    // Keep essential utility classes that might be used dynamically
+    {pattern: /^(bg|text|border)-(primary|secondary|accent|muted)/, variants: ['hover', 'focus']},
+    {pattern: /^(shadow|rounded)-(sm|md|lg)/, variants: ['hover']},
+  ],
   prefix: "",
   theme: {
     container: {
