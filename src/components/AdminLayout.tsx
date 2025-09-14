@@ -33,13 +33,13 @@ const AdminLayout = () => {
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 bg-card border-r border-border min-h-screen">
+        <div className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
           <div className="p-6">
             <h1 className="text-xl font-handwritten font-bold">Admin Panel</h1>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           
-          <nav className="px-4 space-y-2">
+          <nav className="px-4 space-y-2 flex-1">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.href;
@@ -61,7 +61,7 @@ const AdminLayout = () => {
             })}
           </nav>
           
-          <div className="absolute bottom-4 left-4 right-4">
+          <div className="p-4 mt-auto">
             <Button 
               onClick={signOut} 
               variant="outline" 
