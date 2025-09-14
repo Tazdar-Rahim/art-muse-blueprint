@@ -359,13 +359,18 @@ const ArtworkManagement = () => {
               </div>
 
               <div className="flex gap-6">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 p-3 rounded-lg border border-amber-200 bg-amber-50">
                   <Switch
                     id="is_featured"
                     checked={formData.is_featured}
                     onCheckedChange={(checked) => setFormData({...formData, is_featured: checked})}
                   />
-                  <Label htmlFor="is_featured">Featured</Label>
+                  <Label htmlFor="is_featured" className="font-medium text-amber-800">
+                    ⭐ Featured Artwork
+                  </Label>
+                  <p className="text-xs text-amber-600 ml-2">
+                    (Shows on homepage)
+                  </p>
                 </div>
                 
                 <div className="flex items-center space-x-2">
