@@ -100,7 +100,7 @@ const AboutCEO = () => {
                   <img 
                     src={ceoPortrait} 
                     alt="Dr. Tazdar Rahim - CEO"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
                 <h3 className="font-handwritten font-bold text-lg mb-2">Dr. Tazdar Rahim</h3>
