@@ -16,12 +16,20 @@
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     
-    <!-- Resource hints for performance -->
+    <!-- Critical CSS and resource hints for performance -->
+    <style>
+      /* Critical CSS for initial render - basic layout and typography */
+      html { font-family: ui-sans-serif, system-ui, sans-serif; }
+      body { margin: 0; background-color: hsl(var(--background, 0 0% 100%)); color: hsl(var(--foreground, 0 0% 3.9%)); }
+      .font-sans { font-family: Nunito, ui-sans-serif, system-ui, sans-serif; }
+      .font-handwritten { font-family: Kalam, cursive; }
+    </style>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     
-    <!-- Preload critical fonts -->
+    <!-- Optimized font loading with font-display swap -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Kalam:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Kalam:wght@300;400;700&display=swap"></noscript>
   </head>

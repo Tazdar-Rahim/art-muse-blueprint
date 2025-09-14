@@ -24,6 +24,10 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
+    // Generate preload directives for entry chunks
+    modulePreload: {
+      polyfill: false
+    },
   },
   css: {
     devSourcemap: mode === "development",
