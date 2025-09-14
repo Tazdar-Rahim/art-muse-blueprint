@@ -30,6 +30,7 @@ export default {
     },
     extend: {
       fontFamily: {
+        'sans': ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         'handwritten': ['Kalam', 'cursive'],
       },
       colors: {
