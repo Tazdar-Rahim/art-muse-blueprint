@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut, Settings, Package, Image, FileText, Calendar } from 'lucide-react';
+import { LogOut, Settings, Package, Image, FileText, Calendar, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const AdminLayout = () => {
@@ -27,6 +27,7 @@ const AdminLayout = () => {
     { name: 'Commission Packages', href: '/admin/packages', icon: Package },
     { name: 'Commission Requests', href: '/admin/requests', icon: FileText },
     { name: 'Consultation Bookings', href: '/admin/bookings', icon: Calendar },
+    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
   ];
 
   return (

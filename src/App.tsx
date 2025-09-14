@@ -18,6 +18,7 @@ import ArtworkManagement from "./pages/admin/ArtworkManagement";
 import CommissionPackages from "./pages/admin/CommissionPackages";
 import CommissionRequests from "./pages/admin/CommissionRequests";
 import ConsultationBookings from "./pages/admin/ConsultationBookings";
+import Orders from "./pages/admin/Orders";
 import NotFound from "./pages/NotFound";
 import AboutCEO from "./pages/AboutCEO";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -51,6 +52,7 @@ const App = () => (
                 <Route path="packages" element={<CommissionPackages />} />
                 <Route path="requests" element={<CommissionRequests />} />
                 <Route path="bookings" element={<ConsultationBookings />} />
+                <Route path="orders" element={<Orders />} />
               </Route>
               <Route path="/about-ceo" element={<AboutCEO />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
