@@ -95,8 +95,18 @@ const ArtworkManagement = () => {
           });
         }
 
-        // Add successful upload URLs
-        imageUrls = [...imageUrls, ...successfulUploads.map(result => result.url)];
+        if (successfulUploads.length === 0) {
+          toast({
+            title: 'Upload Error',
+            description: 'No images were uploaded successfully',
+            variant: 'destructive',
+          });
+          setIsUploading(false);
+          return;
+        }
+
+        // Add successful upload URLs to existing ones
+        imageUrls = [...formData.image_urls, ...successfulUploads.map(result => result.url)];
       } catch (error) {
         toast({
           title: 'Upload Error',
@@ -106,6 +116,9 @@ const ArtworkManagement = () => {
         setIsUploading(false);
         return;
       }
+    } else {
+      // Use existing image URLs if no new files
+      imageUrls = formData.image_urls;
     }
 
     const artworkData = {

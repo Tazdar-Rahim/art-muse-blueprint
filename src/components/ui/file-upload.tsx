@@ -62,22 +62,31 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     setSelectedFiles(newFiles);
     onFilesChange(newFiles);
 
-    // Create preview URLs for new files
+    // Create preview URLs for new files only for display
     const newPreviewUrls = files.map(file => URL.createObjectURL(file));
     const updatedPreviews = [...previewUrls, ...newPreviewUrls];
     setPreviewUrls(updatedPreviews);
-    onUrlsChange(updatedPreviews);
-  }, [selectedFiles, maxFiles, onFilesChange, previewUrls, onUrlsChange]);
+    // Don't update onUrlsChange here - only pass existing URLs, not blob URLs
+  }, [selectedFiles, maxFiles, onFilesChange, previewUrls]);
 
   const removeFile = useCallback((index: number) => {
-    const newFiles = selectedFiles.filter((_, i) => i !== index);
-    const newPreviews = previewUrls.filter((_, i) => i !== index);
+    const isExistingUrl = index < existingUrls.length;
     
-    setSelectedFiles(newFiles);
+    if (isExistingUrl) {
+      // Removing an existing URL
+      const newExistingUrls = existingUrls.filter((_, i) => i !== index);
+      onUrlsChange(newExistingUrls);
+    } else {
+      // Removing a new file
+      const fileIndex = index - existingUrls.length;
+      const newFiles = selectedFiles.filter((_, i) => i !== fileIndex);
+      setSelectedFiles(newFiles);
+      onFilesChange(newFiles);
+    }
+    
+    const newPreviews = previewUrls.filter((_, i) => i !== index);
     setPreviewUrls(newPreviews);
-    onFilesChange(newFiles);
-    onUrlsChange(newPreviews);
-  }, [selectedFiles, previewUrls, onFilesChange, onUrlsChange]);
+  }, [selectedFiles, previewUrls, onFilesChange, onUrlsChange, existingUrls]);
 
   return (
     <div className="space-y-4">
