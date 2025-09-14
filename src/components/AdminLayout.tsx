@@ -1,12 +1,13 @@
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, Settings, Package, Image, FileText, Calendar, ShoppingBag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 const AdminLayout = () => {
-  const { user, signOut, loading } = useAuth();
+  const { user, isAdmin, loading } = useAdminAuth();
   const location = useLocation();
 
   if (loading) {
@@ -20,6 +21,27 @@ const AdminLayout = () => {
   if (!user) {
     return <Navigate to="/login" />;
   }
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background p-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Access Denied</h1>
+          <p className="text-muted-foreground mb-6">
+            You don't have administrator privileges to access this area.
+          </p>
+          <Button asChild>
+            <Link to="/">Return to Home</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: Settings },
@@ -64,7 +86,7 @@ const AdminLayout = () => {
           
           <div className="p-4 mt-auto">
             <Button 
-              onClick={signOut} 
+              onClick={handleSignOut} 
               variant="outline" 
               className="w-full flex items-center gap-2"
             >
