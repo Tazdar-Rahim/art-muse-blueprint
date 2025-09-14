@@ -43,7 +43,7 @@ const ArtworkManagement = () => {
     price: '',
     dimensions: '',
     image_urls: [] as string[],
-    is_featured: false,
+    is_featured: true,
     is_available: true,
   });
   const { toast } = useToast();
@@ -214,7 +214,7 @@ const ArtworkManagement = () => {
       price: '',
       dimensions: '',
       image_urls: [],
-      is_featured: false,
+      is_featured: true,
       is_available: true,
     });
     setUploadedFiles([]);
