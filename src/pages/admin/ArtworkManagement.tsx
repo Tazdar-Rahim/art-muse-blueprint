@@ -11,6 +11,7 @@ import { AddFeaturedArtworks } from '@/components/AddFeaturedArtworks';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { uploadMultipleFiles } from '@/lib/storage';
+import { resolveArtworkImages } from '@/lib/artwork-images';
 import { Plus, Edit, Trash2, Image } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -408,7 +409,7 @@ const ArtworkManagement = () => {
               {artwork.image_urls && artwork.image_urls.length > 0 && (
                 <div className="mb-4">
                   <img
-                    src={artwork.image_urls[0]}
+                    src={resolveArtworkImages(artwork.image_urls)[0]}
                     alt={artwork.title}
                     className="w-full h-32 object-cover rounded-md"
                     onError={(e) => {

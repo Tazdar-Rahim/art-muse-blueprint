@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, ShoppingCart, Plus } from "lucide-react";
 import { useCartWishlist } from "@/contexts/CartWishlistContext";
+import { resolveArtworkImages } from "@/lib/artwork-images";
 
 interface ArtworkCardProps {
   id: string;
@@ -33,7 +34,8 @@ const ArtworkCard = ({
   onPurchase,
   id
 }: ArtworkCardProps) => {
-  const imageUrl = imageUrls?.[0] || '/placeholder.svg';
+  const resolvedImages = resolveArtworkImages(imageUrls);
+  const imageUrl = resolvedImages[0] || '/placeholder.svg';
   const { addToCart } = useCartWishlist();
 
   const handleAddToCart = () => {
