@@ -106,7 +106,7 @@ const AboutCEO = () => {
                 <h3 className="font-handwritten font-bold text-lg mb-2">Dr. Tazdar Rahim</h3>
                 <p className="text-sm text-muted-foreground mb-4">Chief Executive Officer</p>
                 <p className="text-xs text-muted-foreground italic">
-                  "Strategic Framework and Architect & Strategic extraordinary husband"
+                  "Strategic Framework Architect & Strategic Extraordinary Husband"
                 </p>
               </div>
             </div>
