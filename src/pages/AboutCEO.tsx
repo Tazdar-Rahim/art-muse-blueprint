@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import ceoPortrait from "@/assets/ceo-portrait.jpg";
 
 const AboutCEO = () => {
   return (
@@ -95,8 +96,12 @@ const AboutCEO = () => {
           <div className="lg:col-span-1">
             <div className="sticky top-8">
               <div className="bg-card border border-border rounded-lg p-6 text-center">
-                <div className="w-48 h-48 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
-                  <div className="text-muted-foreground text-sm">CEO Portrait Placeholder</div>
+                <div className="w-48 h-48 mx-auto mb-4 overflow-hidden rounded-lg">
+                  <img 
+                    src={ceoPortrait} 
+                    alt="Dr. Tazdar Rahim - CEO"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="font-handwritten font-bold text-lg mb-2">Dr. Tazdar Rahim</h3>
                 <p className="text-sm text-muted-foreground mb-4">Chief Executive Officer</p>
