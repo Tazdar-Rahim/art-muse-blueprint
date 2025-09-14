@@ -19,12 +19,17 @@ import CommissionRequests from "./pages/admin/CommissionRequests";
 import ConsultationBookings from "./pages/admin/ConsultationBookings";
 import NotFound from "./pages/NotFound";
 import AboutCEO from "./pages/AboutCEO";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import Footer from "./components/Footer";
+
+import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
         <CartWishlistProvider>
@@ -46,6 +51,8 @@ const App = () => (
                 <Route path="bookings" element={<ConsultationBookings />} />
               </Route>
               <Route path="/about-ceo" element={<AboutCEO />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
@@ -55,6 +62,7 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;
