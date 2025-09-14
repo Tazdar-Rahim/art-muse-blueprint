@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import ArtworkCard from "@/components/ArtworkCard";
 import ArtworkCarousel3D from "@/components/ArtworkCarousel3D";
+import ArtworkDetailModal from "@/components/ArtworkDetailModal";
 import CommissionPackageCard from "@/components/CommissionPackageCard";
 import CommissionRequestForm from "@/components/CommissionRequestForm";
 import ConsultationBooking from "@/components/ConsultationBooking";
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { useCartWishlist } from "@/contexts/CartWishlistContext";
 import { Search, Filter, Palette, Mail, Phone, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
 const Index = () => {
   const navigate = useNavigate();
@@ -24,7 +26,10 @@ const Index = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [isCommissionFormOpen, setIsCommissionFormOpen] = useState(false);
+  const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
+  const [isArtworkModalOpen, setIsArtworkModalOpen] = useState(false);
   const { toast } = useToast();
+  const { addToCart } = useCartWishlist();
 
   const handleNavigation = (section: string) => {
     if (section === "cart") {
@@ -79,13 +84,26 @@ const Index = () => {
     return matchesSearch && matchesCategory;
   });
   const handleArtworkView = (id: string) => {
-    toast({
-      title: "Artwork Details",
-      description: "Artwork detail view would open here with full gallery and purchase options."
-    });
+    const artworkToView = artwork?.find(item => item.id === id);
+    if (artworkToView) {
+      setSelectedArtwork(artworkToView);
+      setIsArtworkModalOpen(true);
+    }
   };
+  
   const handleArtworkPurchase = (id: string) => {
-    navigate("/checkout");
+    const artworkToPurchase = artwork?.find(item => item.id === id);
+    if (artworkToPurchase && artworkToPurchase.price) {
+      // Add to cart first, then navigate to checkout
+      addToCart({
+        id: artworkToPurchase.id,
+        title: artworkToPurchase.title,
+        price: artworkToPurchase.price,
+        imageUrl: artworkToPurchase.image_urls?.[0],
+        category: artworkToPurchase.category,
+      });
+      navigate("/checkout");
+    }
   };
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackageId(packageId);
@@ -347,6 +365,14 @@ const Index = () => {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Artwork Detail Modal */}
+      <ArtworkDetailModal
+        isOpen={isArtworkModalOpen}
+        onClose={() => setIsArtworkModalOpen(false)}
+        artwork={selectedArtwork}
+        onPurchase={handleArtworkPurchase}
+      />
     </div>;
 };
 export default Index;

@@ -57,7 +57,10 @@ const ArtworkCard = ({
       {/* Creative shadow card */}
       <div className="absolute inset-0 bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white rounded-lg mobile-shadow shadow-zinc-900 dark:shadow-white transition-all duration-300 group-hover:shadow-[6px_6px_0px_0px] sm:group-hover:shadow-[8px_8px_0px_0px] group-hover:translate-x-[-3px] group-hover:translate-y-[-3px] sm:group-hover:translate-x-[-4px] sm:group-hover:translate-y-[-4px]" />
       
-      <Card className="relative bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white rounded-lg overflow-hidden">
+      <Card 
+        className="relative bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white rounded-lg overflow-hidden cursor-pointer"
+        onClick={() => price && onPurchase(id)}
+      >
         {isFeatured && (
           <div className="absolute -top-2 -right-2 bg-amber-400 text-zinc-900 font-handwritten px-2 sm:px-3 py-1 rounded-full rotate-12 text-xs sm:text-sm border-2 border-zinc-900 z-10">
             Featured! ⭐
@@ -75,7 +78,10 @@ const ArtworkCard = ({
               <Button
                 size="sm"
                 className="flex-1 font-handwritten border-2 border-zinc-900 dark:border-white bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow touch-target touch-interaction"
-                onClick={() => onView(id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onView(id);
+                }}
               >
                 <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 <span className="hidden xs:inline">View</span>
@@ -85,14 +91,20 @@ const ArtworkCard = ({
                   <Button
                     size="sm"
                     className="font-handwritten border-2 border-zinc-900 dark:border-white bg-green-500 text-white hover:bg-green-600 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow touch-target touch-interaction"
-                    onClick={handleAddToCart}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart();
+                    }}
                   >
                     <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
                   <Button
                     size="sm"
                     className="font-handwritten border-2 border-zinc-900 dark:border-white bg-amber-400 text-zinc-900 hover:bg-amber-300 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow touch-target touch-interaction"
-                    onClick={() => onPurchase(id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPurchase(id);
+                    }}
                   >
                     <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-0 sm:mr-1" />
                     <span className="hidden xs:inline">Buy</span>
