@@ -159,7 +159,7 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-1.5 h-1.5 rounded-full border border-foreground transition-all duration-200 font-handwritten touch-target ${
+              className={`w-1 h-1 rounded-full border border-foreground transition-all duration-200 font-handwritten touch-target ${
                 index === currentIndex 
                   ? 'bg-primary scale-110 sm:scale-125' 
                   : 'bg-muted hover:bg-accent'
