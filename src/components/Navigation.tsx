@@ -74,7 +74,7 @@ const Navigation = ({
                     <Palette className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-900" />
                   </div>
                   <div className="relative bg-amber-400/80 px-3 py-2 rounded-lg border-2 border-zinc-900 dark:border-white mobile-shadow shadow-zinc-900 dark:shadow-white">
-                    <h2 className="text-xl sm:text-2xl font-bold font-handwritten text-zinc-900 rotate-[-1deg]">Farhana</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold font-handwritten text-zinc-900 rotate-[-1deg]">Farhana's</h2>
                     <p className="text-sm font-handwritten text-zinc-700 rotate-[1deg]">Art Studio ✨</p>
                   </div>
                 </div>
