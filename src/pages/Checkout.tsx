@@ -308,20 +308,23 @@ const Checkout = () => {
                 </CardHeader>
                 <CardContent className="space-y-3 sm:space-y-4">
                   <div className="space-y-2">
-                    {cartItems.map((item) => (
-                      <div key={item.id} className="flex items-center gap-2 sm:gap-3 pb-2 border-b border-muted">
-                        <img
-                          src={item.imageUrl || '/placeholder.svg'}
-                          alt={item.title}
-                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded border"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-handwritten text-xs sm:text-sm truncate">{item.title}</p>
-                          <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                        </div>
-                        <p className="font-handwritten text-sm sm:text-base">₹{item.price * item.quantity}</p>
-                      </div>
-                    ))}
+                    {cartItems.map((item) => {
+                      const resolvedImages = resolveArtworkImages([item.imageUrl || '']);
+                      return (
+                        <div key={item.id} className="flex items-center gap-2 sm:gap-3 pb-2 border-b border-muted">
+                          <img
+                            src={resolvedImages[0]}
+                            alt={item.title}
+                            className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded border"
+                          />
+                         <div className="flex-1 min-w-0">
+                           <p className="font-handwritten text-xs sm:text-sm truncate">{item.title}</p>
+                           <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                         </div>
+                         <p className="font-handwritten text-sm sm:text-base">₹{item.price * item.quantity}</p>
+                       </div>
+                     );
+                   })}
                   </div>
                   
                   <div className="space-y-2 pt-2">
