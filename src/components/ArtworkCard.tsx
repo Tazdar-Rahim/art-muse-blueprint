@@ -64,7 +64,7 @@ const ArtworkCard = ({
         onClick={() => price && onPurchase(id)}
       >
         {isFeatured && (
-          <div className="absolute -top-2 -right-2 bg-amber-400 text-zinc-900 font-handwritten px-2 sm:px-3 py-1 rounded-full rotate-12 text-xs sm:text-sm border-2 border-zinc-900 z-10">
+          <div className="absolute top-2 right-2 bg-amber-400 text-zinc-900 font-handwritten px-2 sm:px-3 py-1 rounded-full rotate-12 text-xs sm:text-sm border-2 border-zinc-900 z-20 shadow-lg">
             Featured! ⭐
           </div>
         )}
