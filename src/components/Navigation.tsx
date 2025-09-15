@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
-import { Menu, Home, Image, Palette, MessageSquare, ShoppingBag, Phone, ShoppingCart, Heart } from "lucide-react";
+import { Menu, Home, Image, Palette, MessageSquare, ShoppingBag, Phone, ShoppingCart, Heart, LogIn, LogOut, Package } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 interface NavigationProps {
   activeSection: string;
   onNavigate: (section: string) => void;
@@ -13,6 +16,9 @@ const Navigation = ({
   activeSection,
   onNavigate
 }: NavigationProps) => {
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const { isCustomer, user } = useCustomerAuth();
   const [isOpen, setIsOpen] = useState(false);
 const menuItems = [{
     id: "gallery",
@@ -30,21 +36,31 @@ const menuItems = [{
     id: "contact",
     label: "Contact",
     icon: Phone
-  }, {
+  }];
+
+  const navigationItems = [{
     id: "cart",
     label: "My Cart",
-    icon: ShoppingCart
+    icon: ShoppingCart,
+    path: "/cart"
   }, {
     id: "wishlist",
     label: "Wishlist",
-    icon: Heart
-  }, {
-    id: "my-orders",
-    label: "My Orders",
-    icon: ShoppingBag
+    icon: Heart,
+    path: "/wishlist"
   }];
   const handleNavigation = (section: string) => {
     onNavigate(section);
+    setIsOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsOpen(false);
+  };
+
+  const handleRouteNavigation = (path: string) => {
+    navigate(path);
     setIsOpen(false);
   };
   return <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b-2 border-zinc-900 dark:border-white mobile-shadow shadow-zinc-900 dark:shadow-white">
@@ -105,6 +121,72 @@ const menuItems = [{
                         {isActive && <div className="absolute -top-1 -right-1 text-lg rotate-12">⭐</div>}
                       </div>;
                 })}
+
+                  {/* Navigation Items */}
+                  {navigationItems.map((item, index) => {
+                    const Icon = item.icon;
+                    const rotations = ['rotate-[-1deg]', 'rotate-[1deg]', 'rotate-[-0.5deg]'];
+                    const rotation = rotations[(menuItems.length + index) % rotations.length];
+                    return <div key={item.id} className={`relative ${rotation}`}>
+                          <Button variant="ghost" onClick={() => handleRouteNavigation(item.path)} className={`
+                              w-full justify-start h-12 sm:h-14 mobile-text font-handwritten
+                              border-2 border-zinc-900 dark:border-white rounded-lg
+                              mobile-shadow shadow-zinc-900 dark:shadow-white
+                              mobile-hover-shadow
+                              transition-all duration-200 touch-interaction
+                              bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700
+                            `}>
+                            <Icon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                            {item.label}
+                          </Button>
+                        </div>;
+                  })}
+
+                  {/* Authentication */}
+                  {user && isCustomer ? (
+                    <>
+                      <div className="relative rotate-[0.5deg]">
+                        <Button variant="ghost" onClick={() => handleRouteNavigation("/my-orders")} className={`
+                            w-full justify-start h-12 sm:h-14 mobile-text font-handwritten
+                            border-2 border-zinc-900 dark:border-white rounded-lg
+                            mobile-shadow shadow-zinc-900 dark:shadow-white
+                            mobile-hover-shadow
+                            transition-all duration-200 touch-interaction
+                            bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700
+                          `}>
+                          <Package className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                          My Orders
+                        </Button>
+                      </div>
+                      <div className="relative rotate-[-0.5deg]">
+                        <Button variant="ghost" onClick={handleSignOut} className={`
+                            w-full justify-start h-12 sm:h-14 mobile-text font-handwritten
+                            border-2 border-zinc-900 dark:border-white rounded-lg
+                            mobile-shadow shadow-zinc-900 dark:shadow-white
+                            mobile-hover-shadow
+                            transition-all duration-200 touch-interaction
+                            bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30
+                          `}>
+                          <LogOut className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                          Sign Out
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="relative rotate-[0.5deg]">
+                      <Button variant="ghost" onClick={() => handleRouteNavigation("/customer-auth")} className={`
+                          w-full justify-start h-12 sm:h-14 mobile-text font-handwritten
+                          border-2 border-zinc-900 dark:border-white rounded-lg
+                          mobile-shadow shadow-zinc-900 dark:shadow-white
+                          mobile-hover-shadow
+                          transition-all duration-200 touch-interaction
+                          bg-green-50 dark:bg-green-900/20 text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30
+                        `}>
+                        <LogIn className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
+                        Sign In
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </SheetContent>

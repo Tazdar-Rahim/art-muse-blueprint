@@ -36,6 +36,13 @@ const Checkout = () => {
     notes: ''
   });
 
+  // Update form data when user changes
+  React.useEffect(() => {
+    if (user?.email && !formData.email) {
+      setFormData(prev => ({ ...prev, email: user.email }));
+    }
+  }, [user, formData.email]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
@@ -91,6 +98,7 @@ const Checkout = () => {
           customer_name: `${formData.firstName} ${formData.lastName}`,
           customer_email: formData.email,
           customer_phone: formData.phone,
+          user_id: user?.id || null,
           shipping_address: shippingAddress,
           total_amount: getCartTotal(),
           payment_status: 'pending',
@@ -169,6 +177,18 @@ const Checkout = () => {
             <p className="text-muted-foreground font-handwritten mobile-text">Complete your purchase</p>
           </div>
         </div>
+
+        {/* Authentication Section for Guest Users */}
+        {!user && (
+          <div className="max-w-2xl mx-auto mb-8">
+            <CheckoutAuth onAuthSuccess={() => {
+              // User authenticated, form will pre-fill with user data
+              if (user?.email) {
+                setFormData(prev => ({ ...prev, email: user.email }));
+              }
+            }} />
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
