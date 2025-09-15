@@ -6,20 +6,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCartWishlist } from '@/contexts/CartWishlistContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { resolveArtworkImages } from '@/lib/artwork-images';
+import CheckoutAuth from '@/components/CheckoutAuth';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getCartTotal, clearCart } = useCartWishlist();
+  const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAuthForm, setShowAuthForm] = useState(!user);
   const [formData, setFormData] = useState({
     // Personal Information
     firstName: '',
     lastName: '',
-    email: '',
+    email: user?.email || '',
     phone: '',
     
     // Shipping Address

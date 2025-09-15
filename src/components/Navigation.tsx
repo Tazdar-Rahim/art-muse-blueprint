@@ -14,7 +14,7 @@ const Navigation = ({
   onNavigate
 }: NavigationProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const menuItems = [{
+const menuItems = [{
     id: "gallery",
     label: "Gallery",
     icon: Image
@@ -38,6 +38,10 @@ const Navigation = ({
     id: "wishlist",
     label: "Wishlist",
     icon: Heart
+  }, {
+    id: "my-orders",
+    label: "My Orders",
+    icon: ShoppingBag
   }];
   const handleNavigation = (section: string) => {
     onNavigate(section);

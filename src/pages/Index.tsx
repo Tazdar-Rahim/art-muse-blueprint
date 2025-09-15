@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartWishlist } from "@/contexts/CartWishlistContext";
-import { Search, Filter, Palette, Mail, Phone, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { Search, Filter, Palette, Mail, Phone, MapPin, Instagram, Facebook, Twitter, ShoppingBag } from "lucide-react";
 const Index = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("home");
@@ -36,6 +36,8 @@ const Index = () => {
       navigate("/cart");
     } else if (section === "wishlist") {
       navigate("/wishlist");
+    } else if (section === "my-orders") {
+      navigate("/my-orders");
     } else {
       setActiveSection(section);
     }
@@ -330,6 +332,14 @@ const Index = () => {
                     <div>
                       <div className="font-semibold">Admin Portal</div>
                       <div className="text-sm text-muted-foreground">Manage content and orders</div>
+                    </div>
+                  </Button>
+
+                  <Button variant="outline" className="w-full justify-start h-16 text-left" onClick={() => navigate("/customer-auth")}>
+                    <ShoppingBag className="w-6 h-6 mr-4 text-primary" />
+                    <div>
+                      <div className="font-semibold">My Orders</div>
+                      <div className="text-sm text-muted-foreground">Track your purchases & orders</div>
                     </div>
                   </Button>
 
