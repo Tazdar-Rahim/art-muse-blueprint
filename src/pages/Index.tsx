@@ -291,7 +291,7 @@ const Index = () => {
                       variant="ghost" 
                       size="sm" 
                       className="w-12 h-12 p-0"
-                      onClick={() => window.open('https://www.facebook.com/share/19zVWX9f5r/?mibextid=wwXIfr', '_blank')}
+                      onClick={() => window.open('https://www.facebook.com/farhana.shaheen.12', '_blank')}
                     >
                       <Facebook className="w-5 h-5" />
                     </Button>
