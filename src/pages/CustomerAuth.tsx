@@ -35,9 +35,18 @@ const CustomerAuth = () => {
     const { error } = await signIn(email, password);
     
     if (error) {
+      let errorMessage = error.message;
+      let errorTitle = "Error";
+      
+      // Handle specific error cases
+      if (error.message === "Invalid login credentials") {
+        errorTitle = "Sign In Failed";
+        errorMessage = "Please check your email and password. If you just signed up, make sure to confirm your email address first.";
+      }
+      
       toast({
-        title: "Error",
-        description: error.message,
+        title: errorTitle,
+        description: errorMessage,
         variant: "destructive",
       });
     } else {
@@ -55,7 +64,7 @@ const CustomerAuth = () => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await signUp(email, password);
+    const { data, error } = await signUp(email, password);
     
     if (error) {
       toast({
@@ -64,10 +73,24 @@ const CustomerAuth = () => {
         variant: "destructive",
       });
     } else {
-      toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
-      });
+      // Check if user was created or already exists
+      if (data?.user && !data.session) {
+        toast({
+          title: "Check Your Email!",
+          description: "We've sent you a confirmation link. Please check your email and click the link to verify your account before signing in.",
+        });
+      } else if (data?.session) {
+        toast({
+          title: "Account created!",
+          description: "You have been signed up and logged in successfully.",
+        });
+        navigate("/my-orders");
+      } else {
+        toast({
+          title: "Account Created",
+          description: "Please check your email to verify your account before signing in.",
+        });
+      }
     }
     
     setLoading(false);
@@ -104,7 +127,11 @@ const CustomerAuth = () => {
           <CardHeader>
             <CardTitle>Welcome</CardTitle>
             <CardDescription>
-              Sign in to track your orders or create an account to get started
+              Sign in to track your orders or create an account to get started.
+              <br />
+              <span className="text-xs text-muted-foreground mt-2 block">
+                📧 New users: Check your email after signing up to confirm your account.
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent>
