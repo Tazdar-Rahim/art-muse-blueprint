@@ -20,6 +20,7 @@ const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
 const AuthResetPassword = lazy(() => import("./pages/AuthResetPassword"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const MyOrders = lazy(() => import("./pages/MyOrders"));
+const OrderDetails = lazy(() => import("./pages/OrderDetails"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
 const Checkout = lazy(() => import("./pages/Checkout"));
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/auth/reset-password" element={<AuthResetPassword />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/my-orders" element={<MyOrders />} />
+                <Route path="/order/:id" element={<OrderDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<Checkout />} />
