@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { Button } from "@/components/ui/button";
@@ -211,6 +211,15 @@ const CustomerAuth = () => {
                   >
                     {loading ? "Signing in... 🎨" : "Sign In & Explore! 🚀"}
                   </Button>
+                  
+                  <div className="text-center">
+                    <Link 
+                      to="/forgot-password" 
+                      className="text-sm font-handwritten text-primary hover:text-primary/80 transition-colors"
+                    >
+                      Forgot your password?
+                    </Link>
+                  </div>
                 </form>
               </TabsContent>
               

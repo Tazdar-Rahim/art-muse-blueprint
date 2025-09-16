@@ -16,6 +16,9 @@ import Footer from "./components/Footer";
 // Lazy load non-critical pages
 const Login = lazy(() => import("./pages/Login"));
 const CustomerAuth = lazy(() => import("./pages/CustomerAuth"));
+const AuthConfirm = lazy(() => import("./pages/AuthConfirm"));
+const AuthResetPassword = lazy(() => import("./pages/AuthResetPassword"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const MyOrders = lazy(() => import("./pages/MyOrders"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
@@ -51,6 +54,9 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/customer-auth" element={<CustomerAuth />} />
+                <Route path="/auth/confirm" element={<AuthConfirm />} />
+                <Route path="/auth/reset-password" element={<AuthResetPassword />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/my-orders" element={<MyOrders />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/wishlist" element={<Wishlist />} />
