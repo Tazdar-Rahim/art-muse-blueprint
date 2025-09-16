@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+// Remove useCustomerAuth import - using useAuth instead
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,19 +33,18 @@ interface Order {
 
 const MyOrders = () => {
   const navigate = useNavigate();
-  const { user, isCustomer, loading: authLoading } = useCustomerAuth();
-  const { signOut } = useAuth();
+  const { user, signOut, loading: authLoading } = useAuth();
   const { toast } = useToast();
   
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Redirect if not authenticated or not a customer
+  // Redirect if not authenticated
   useEffect(() => {
-    if (!authLoading && (!user || !isCustomer)) {
+    if (!authLoading && !user) {
       navigate("/customer-auth");
     }
-  }, [user, isCustomer, authLoading, navigate]);
+  }, [user, authLoading, navigate]);
 
   useEffect(() => {
     if (user) {
@@ -73,7 +72,7 @@ const MyOrders = () => {
           *,
           order_items (*)
         `)
-        .or(`user_id.eq.${user.id},customer_email.eq.${user.email}`)
+        .or(`user_id.eq.${user.id},customer_email.eq."${user.email}"`)
         .order('created_at', { ascending: false });
 
       if (ordersError) {
