@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
@@ -227,13 +228,36 @@ const Index = () => {
             <section className="space-y-8">
               <h2 className="text-2xl font-bold text-center text-foreground">Choose a Package</h2>
               
-              {packagesLoading ? <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Array.from({
-                length: 6
-              }).map((_, i) => <Card key={i} className="h-80 animate-pulse bg-muted" />)}
-                </div> : <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {packages?.map(pkg => <CommissionPackageCard key={pkg.id} id={pkg.id} name={pkg.name} description={pkg.description} basePrice={pkg.base_price} category={pkg.category} style={pkg.style} includes={pkg.includes} turnaroundDays={pkg.turnaround_days} imageUrl={pkg.image_url} onSelect={handlePackageSelect} />)}
-                </div>}
+              {packagesLoading ? (
+                <div className="flex gap-6 overflow-hidden">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <Card key={i} className="h-80 min-w-80 animate-pulse bg-muted" />
+                  ))}
+                </div>
+              ) : (
+                <Carousel className="w-full max-w-5xl mx-auto">
+                  <CarouselContent className="-ml-2 md:-ml-4">
+                    {packages?.map(pkg => (
+                      <CarouselItem key={pkg.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                        <CommissionPackageCard 
+                          id={pkg.id} 
+                          name={pkg.name} 
+                          description={pkg.description} 
+                          basePrice={pkg.base_price} 
+                          category={pkg.category} 
+                          style={pkg.style} 
+                          includes={pkg.includes} 
+                          turnaroundDays={pkg.turnaround_days} 
+                          imageUrl={pkg.image_url} 
+                          onSelect={handlePackageSelect} 
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              )}
             </section>
           </div>;
       case "consultation":
