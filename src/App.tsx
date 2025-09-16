@@ -2,11 +2,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartWishlistProvider } from "@/contexts/CartWishlistContext";
 import { HelmetProvider } from "react-helmet-async";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 
 // Eager load critical pages
 import Index from "./pages/Index";
@@ -41,6 +41,38 @@ const Orders = lazy(() => import("./pages/admin/Orders"));
 
 const queryClient = new QueryClient();
 
+// Route guard component to ensure proper navigation
+const RouteGuard = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Clear any URL fragments that might cause issues
+    if (location.hash && !location.pathname.includes('/auth/')) {
+      window.history.replaceState({}, '', location.pathname + location.search);
+    }
+
+    // If user is on an invalid path or there are redirect issues, go to home
+    const validPaths = [
+      '/', '/login', '/customer-auth', '/auth/confirm', '/auth/reset-password', 
+      '/forgot-password', '/my-orders', '/cart', '/wishlist', '/checkout', 
+      '/order-success', '/about-ceo', '/privacy', '/terms'
+    ];
+    
+    const isValidPath = validPaths.some(path => location.pathname === path) ||
+      location.pathname.startsWith('/order/') ||
+      location.pathname.startsWith('/payment/') ||
+      location.pathname.startsWith('/admin');
+
+    // If path is invalid and not already on home, redirect to home
+    if (!isValidPath && location.pathname !== '/') {
+      navigate('/', { replace: true });
+    }
+  }, [location, navigate]);
+
+  return null;
+};
+
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
@@ -50,6 +82,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <RouteGuard />
             <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
               <Routes>
                 <Route path="/" element={<Index />} />
