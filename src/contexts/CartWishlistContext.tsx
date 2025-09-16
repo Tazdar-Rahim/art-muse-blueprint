@@ -53,11 +53,13 @@ interface CartWishlistProviderProps {
 export const CartWishlistProvider = ({ children }: CartWishlistProviderProps) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   // Load wishlist from database when user is authenticated
   useEffect(() => {
     const loadWishlist = async () => {
+      if (loading) return; // Wait for auth to load
+      
       if (!user) {
         setWishlistItems([]);
         return;
@@ -85,7 +87,7 @@ export const CartWishlistProvider = ({ children }: CartWishlistProviderProps) =>
     };
 
     loadWishlist();
-  }, [user]);
+  }, [user, loading]);
 
   // Cart functions
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
