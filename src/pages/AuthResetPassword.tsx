@@ -12,7 +12,7 @@ import { Helmet } from 'react-helmet-async';
 
 const AuthResetPassword = () => {
   const navigate = useNavigate();
-  const { updatePassword } = useAuth();
+  const { updatePassword, signOut } = useAuth();
   const { toast } = useToast();
   
   const [status, setStatus] = useState<'loading' | 'ready' | 'updating' | 'success' | 'error'>('loading');
@@ -139,6 +139,9 @@ const AuthResetPassword = () => {
         title: "Password Updated",
         description: "Your password has been changed successfully. Redirecting to sign in...",
       });
+
+      // Sign out user to clear any existing session before redirect
+      await signOut();
 
       // Redirect to sign in page after success
       setTimeout(() => {

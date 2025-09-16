@@ -57,13 +57,23 @@ const MyOrders = () => {
     try {
       setLoading(true);
       
+      if (!user?.id || !user?.email) {
+        console.error('User data incomplete:', { userId: user?.id, userEmail: user?.email });
+        toast({
+          title: "Error",
+          description: "Unable to load your profile. Please sign in again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select(`
           *,
           order_items (*)
         `)
-        .or(`user_id.eq.${user?.id},customer_email.eq.${user?.email}`)
+        .or(`user_id.eq.${user.id},customer_email.eq.${user.email}`)
         .order('created_at', { ascending: false });
 
       if (ordersError) {

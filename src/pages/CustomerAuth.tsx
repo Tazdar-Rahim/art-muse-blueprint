@@ -24,7 +24,7 @@ const CustomerAuth = () => {
   // Redirect if already logged in as customer
   React.useEffect(() => {
     if (user && isCustomer) {
-      navigate("/my-orders");
+      navigate("/");
     }
   }, [user, isCustomer, navigate]);
 
@@ -54,7 +54,7 @@ const CustomerAuth = () => {
         title: "Welcome back!",
         description: "You have been signed in successfully.",
       });
-      navigate("/my-orders");
+      navigate("/");
     }
     
     setLoading(false);
@@ -84,7 +84,7 @@ const CustomerAuth = () => {
           title: "Account created!",
           description: "You have been signed up and logged in successfully.",
         });
-        navigate("/my-orders");
+        navigate("/");
       } else {
         toast({
           title: "Account Created",
