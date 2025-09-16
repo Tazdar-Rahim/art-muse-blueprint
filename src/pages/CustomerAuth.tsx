@@ -21,12 +21,12 @@ const CustomerAuth = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Redirect if already logged in as customer
+  // Redirect if already logged in
   React.useEffect(() => {
-    if (user && isCustomer) {
+    if (user) {
       navigate("/");
     }
-  }, [user, isCustomer, navigate]);
+  }, [user, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

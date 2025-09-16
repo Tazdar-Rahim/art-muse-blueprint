@@ -143,7 +143,7 @@ const menuItems = [{
                   })}
 
                   {/* Authentication */}
-                  {user && isCustomer ? (
+                  {user ? (
                     <>
                       <div className="relative rotate-[0.5deg]">
                         <Button variant="ghost" onClick={() => handleRouteNavigation("/my-orders")} className={`
