@@ -235,10 +235,17 @@ const Index = () => {
                   ))}
                 </div>
               ) : (
-                <Carousel className="w-full max-w-5xl mx-auto">
+                <Carousel 
+                  className="w-full max-w-5xl mx-auto"
+                  opts={{
+                    align: "start",
+                    slidesToScroll: 1,
+                    dragFree: true,
+                  }}
+                >
                   <CarouselContent className="-ml-2 md:-ml-4">
                     {packages?.map(pkg => (
-                      <CarouselItem key={pkg.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                      <CarouselItem key={pkg.id} className="pl-2 md:pl-4 basis-4/5 sm:basis-3/5 md:basis-1/2 lg:basis-1/3">
                         <CommissionPackageCard 
                           id={pkg.id} 
                           name={pkg.name} 
@@ -254,8 +261,10 @@ const Index = () => {
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
+                  <div className="hidden sm:block">
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </div>
                 </Carousel>
               )}
             </section>
