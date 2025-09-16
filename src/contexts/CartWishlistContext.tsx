@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CartItem {
   id: string;
@@ -51,6 +53,39 @@ interface CartWishlistProviderProps {
 export const CartWishlistProvider = ({ children }: CartWishlistProviderProps) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+  const { user } = useAuth();
+
+  // Load wishlist from database when user is authenticated
+  useEffect(() => {
+    const loadWishlist = async () => {
+      if (!user) {
+        setWishlistItems([]);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('wishlists')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Error loading wishlist:', error);
+        return;
+      }
+
+      const wishlistItems: WishlistItem[] = data.map(item => ({
+        id: item.artwork_id,
+        title: item.artwork_title,
+        price: item.artwork_price,
+        imageUrl: item.artwork_image_url,
+        category: item.artwork_category,
+      }));
+
+      setWishlistItems(wishlistItems);
+    };
+
+    loadWishlist();
+  }, [user]);
 
   // Cart functions
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
@@ -111,26 +146,75 @@ export const CartWishlistProvider = ({ children }: CartWishlistProviderProps) =>
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
-  // Wishlist functions
-  const addToWishlist = (item: WishlistItem) => {
-    setWishlistItems(prev => {
-      if (prev.find(wishlistItem => wishlistItem.id === item.id)) {
-        toast({
-          title: "Already in wishlist",
-          description: `${item.title} is already in your wishlist`,
-        });
-        return prev;
-      }
+  // Wishlist functions with database integration
+  const addToWishlist = async (item: WishlistItem) => {
+    if (!user) {
       toast({
-        title: "Added to wishlist",
-        description: `${item.title} saved to your wishlist`,
+        title: "Sign in required",
+        description: "Please sign in to save items to your wishlist",
       });
-      return [...prev, item];
+      return;
+    }
+
+    if (wishlistItems.find(wishlistItem => wishlistItem.id === item.id)) {
+      toast({
+        title: "Already in wishlist",
+        description: `${item.title} is already in your wishlist`,
+      });
+      return;
+    }
+
+    // Add to database
+    const { error } = await supabase
+      .from('wishlists')
+      .insert({
+        user_id: user.id,
+        artwork_id: item.id,
+        artwork_title: item.title,
+        artwork_price: item.price,
+        artwork_image_url: item.imageUrl,
+        artwork_category: item.category,
+      });
+
+    if (error) {
+      console.error('Error adding to wishlist:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add item to wishlist",
+      });
+      return;
+    }
+
+    setWishlistItems(prev => [...prev, item]);
+    toast({
+      title: "Added to wishlist",
+      description: `${item.title} saved to your wishlist`,
     });
   };
 
-  const removeFromWishlist = (id: string) => {
+  const removeFromWishlist = async (id: string) => {
     const item = wishlistItems.find(item => item.id === id);
+    
+    if (!user) {
+      return;
+    }
+
+    // Remove from database
+    const { error } = await supabase
+      .from('wishlists')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('artwork_id', id);
+
+    if (error) {
+      console.error('Error removing from wishlist:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove item from wishlist",
+      });
+      return;
+    }
+
     setWishlistItems(prev => prev.filter(item => item.id !== id));
     if (item) {
       toast({

@@ -318,6 +318,47 @@ export type Database = {
         }
         Relationships: []
       }
+      wishlists: {
+        Row: {
+          artwork_category: string
+          artwork_id: string
+          artwork_image_url: string | null
+          artwork_price: number | null
+          artwork_title: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          artwork_category: string
+          artwork_id: string
+          artwork_image_url?: string | null
+          artwork_price?: number | null
+          artwork_title: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          artwork_category?: string
+          artwork_id?: string
+          artwork_image_url?: string | null
+          artwork_price?: number | null
+          artwork_title?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlists_artwork_id_fkey"
+            columns: ["artwork_id"]
+            isOneToOne: false
+            referencedRelation: "artwork"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
