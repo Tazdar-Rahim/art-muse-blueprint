@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Helmet } from 'react-helmet-async';
 
 const AuthResetPassword = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { updatePassword } = useAuth();
   const { toast } = useToast();
@@ -26,36 +25,53 @@ const AuthResetPassword = () => {
 
   useEffect(() => {
     const verifyResetToken = async () => {
-      const token_hash = searchParams.get('token_hash');
-      const type = searchParams.get('type');
+      // Parse URL fragment parameters (Supabase sends tokens as fragments, not query params)
+      const parseUrlFragment = () => {
+        const hash = window.location.hash.substring(1); // Remove the # symbol
+        const params = new URLSearchParams(hash);
+        return {
+          access_token: params.get('access_token'),
+          refresh_token: params.get('refresh_token'),
+          type: params.get('type')
+        };
+      };
 
-      if (!token_hash || type !== 'recovery') {
+      const fragmentParams = parseUrlFragment();
+      
+      // Also check query parameters as fallback
+      const urlParams = new URLSearchParams(window.location.search);
+      const token_hash = urlParams.get('token_hash');
+      const query_type = urlParams.get('type');
+
+      console.log('Fragment params:', fragmentParams);
+      console.log('Query params:', { token_hash, type: query_type });
+
+      // Check if we have the required parameters
+      if (!fragmentParams.access_token && !token_hash) {
         setStatus('error');
         setMessage('Invalid password reset link. Please request a new password reset.');
         return;
       }
 
       try {
-        const { data, error } = await supabase.auth.verifyOtp({
-          token_hash,
-          type: 'recovery'
-        });
-
-        if (error) {
-          console.error('Token verification error:', error);
-          if (error.message.includes('expired') || error.message.includes('invalid')) {
-            setStatus('error');
-            setMessage('This password reset link has expired. Please request a new one.');
-          } else {
-            setStatus('error');
-            setMessage(error.message || 'Invalid reset link. Please try again.');
-          }
+        // Get current session - Supabase automatically handles the token from the URL
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        
+        console.log('Session data:', sessionData);
+        
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          setStatus('error');
+          setMessage('Invalid or expired reset link. Please request a new one.');
           return;
         }
 
-        if (data.user) {
+        if (sessionData.session && sessionData.session.user) {
           setStatus('ready');
           setMessage('Please enter your new password below.');
+        } else {
+          setStatus('error');
+          setMessage('Unable to verify reset link. Please try clicking the link again or request a new one.');
         }
       } catch (err) {
         console.error('Unexpected error during token verification:', err);
@@ -65,7 +81,7 @@ const AuthResetPassword = () => {
     };
 
     verifyResetToken();
-  }, [searchParams]);
+  }, []);
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
