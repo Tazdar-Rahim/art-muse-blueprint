@@ -29,7 +29,7 @@ const HomePage = () => {
   // Fetch selected artwork data
   const { data: artworkResponse } = useArtworkById(selectedArtworkId || "", {
     enabled: !!selectedArtworkId && isArtworkModalOpen,
-  });
+  } as any);
   const selectedArtwork = artworkResponse?.data;
 
   const handleNavigation = (section: string) => {
@@ -169,7 +169,7 @@ const HomePage = () => {
           </DialogHeader>
           <CommissionRequestForm
             selectedPackageId={selectedPackageId}
-            onClose={() => {
+            onSuccess={() => {
               setIsCommissionFormOpen(false);
               setSelectedPackageId(undefined);
             }}
@@ -181,6 +181,7 @@ const HomePage = () => {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedArtwork && (
             <ArtworkDetailModal
+              isOpen={isArtworkModalOpen}
               artwork={selectedArtwork}
               onClose={() => {
                 setIsArtworkModalOpen(false);
