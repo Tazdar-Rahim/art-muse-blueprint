@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -311,26 +312,31 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-// Simple SMTP client for Gmail
+// Gmail SMTP client
 async function sendEmailViaSMTP(emailData: any) {
   try {
-    // This is a simplified approach - in production, you might want to use
-    // a dedicated email service like Resend, SendGrid, or implement full SMTP
+    const client = new SmtpClient();
     
-    // For now, we'll simulate the email sending and log it
-    // In a real implementation, you would establish a TCP connection to smtp.gmail.com:587
+    await client.connectTLS({
+      hostname: "smtp.gmail.com",
+      port: 587,
+      username: emailData.smtp.auth.user,
+      password: emailData.smtp.auth.pass,
+    });
+
+    await client.send({
+      from: emailData.from,
+      to: emailData.to,
+      subject: emailData.subject,
+      content: emailData.text,
+    });
+
+    await client.close();
     
-    console.log('SMTP Email Details:');
-    console.log('Host: smtp.gmail.com:587');
-    console.log('From:', emailData.from);
-    console.log('To:', emailData.to);
-    console.log('Subject:', emailData.subject);
-    console.log('Body:', emailData.text);
-    
-    // Simulate successful sending
+    console.log('Email sent successfully via Gmail SMTP');
     return { messageId: `${Date.now()}@gmail.com` };
   } catch (error) {
-    console.error('SMTP Error:', error);
+    console.error('Gmail SMTP Error:', error);
     throw error;
   }
 }
