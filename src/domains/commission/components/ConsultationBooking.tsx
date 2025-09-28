@@ -186,11 +186,11 @@ const ConsultationBooking = () => {
                     id="whatsapp"
                     value={formData.whatsappNumber}
                     onChange={(e) => handleInputChange("whatsappNumber", e.target.value)}
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+91 98765 43210"
                     required
                   />
                   <p className="text-xs text-muted-foreground">
-                    Include country code (e.g., +1 for US, +44 for UK)
+                    Include country code (e.g., +91 for India)
                   </p>
                 </div>
 

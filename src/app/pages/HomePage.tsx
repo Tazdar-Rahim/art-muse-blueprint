@@ -49,20 +49,21 @@ const HomePage = () => {
     setIsArtworkModalOpen(true);
   };
 
-  const handleArtworkPurchase = (id: string) => {
-    const { data: artworkResponse } = useArtworkById(id);
-    const artwork = artworkResponse?.data;
-    
-    if (artwork && artwork.price) {
-      addToCart({
-        id: artwork.id,
-        title: artwork.title,
-        price: artwork.price,
-        imageUrl: artwork.image_urls?.[0],
-        category: artwork.category,
-      });
-      navigate("/checkout");
-    }
+  const handleArtworkPurchase = (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => {
+    addToCart({
+      id: artworkData.id,
+      title: artworkData.title,
+      price: artworkData.price,
+      imageUrl: artworkData.imageUrl,
+      category: artworkData.category,
+    });
+    navigate("/checkout");
   };
 
   const handlePackageSelect = (packageId: string) => {
@@ -187,8 +188,8 @@ const HomePage = () => {
                 setIsArtworkModalOpen(false);
                 setSelectedArtworkId(null);
               }}
-              onPurchase={(id) => {
-                handleArtworkPurchase(id);
+              onPurchase={(artworkData) => {
+                handleArtworkPurchase(artworkData);
                 setIsArtworkModalOpen(false);
                 setSelectedArtworkId(null);
               }}

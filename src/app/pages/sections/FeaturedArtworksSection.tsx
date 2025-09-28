@@ -5,7 +5,13 @@ import { useFeaturedArtwork } from "@/domains/artwork/hooks/useArtwork";
 
 interface FeaturedArtworksSectionProps {
   onArtworkView: (id: string) => void;
-  onArtworkPurchase: (id: string) => void;
+  onArtworkPurchase: (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => void;
   onViewGallery: () => void;
 }
 

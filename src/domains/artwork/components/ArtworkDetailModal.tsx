@@ -20,7 +20,13 @@ interface ArtworkDetailModalProps {
     image_urls?: string[];
     is_featured?: boolean;
   } | null;
-  onPurchase: (id: string) => void;
+  onPurchase: (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => void;
 }
 
 const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDetailModalProps) => {
@@ -152,7 +158,13 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
                   </Button>
                   
                   <Button
-                    onClick={() => onPurchase(artwork.id)}
+                    onClick={() => onPurchase({
+                      id: artwork.id,
+                      title: artwork.title,
+                      price: artwork.price!,
+                      imageUrl: resolvedImages[0],
+                      category: artwork.category,
+                    })}
                     className="font-handwritten border-2 border-foreground bg-amber-400 text-zinc-900 hover:bg-amber-300 mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all"
                   >
                     Buy Now

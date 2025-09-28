@@ -20,7 +20,13 @@ interface ArtworkData {
 interface ArtworkCarousel3DProps {
   artworks: ArtworkData[];
   onView: (id: string) => void;
-  onPurchase: (id: string) => void;
+  onPurchase: (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => void;
 }
 
 const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DProps) => {
@@ -117,7 +123,7 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                     imageUrls={artwork.image_urls}
                     isFeatured={artwork.is_featured}
                     onView={onView}
-                    onPurchase={onPurchase}
+                    onPurchase={(artworkData) => onPurchase(artworkData)}
                   />
                   {/* Mobile-Enhanced Save Button */}
                   <Button

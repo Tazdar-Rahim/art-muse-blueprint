@@ -8,7 +8,13 @@ import { Search, Filter, Palette } from "lucide-react";
 
 interface ArtworkGallerySectionProps {
   onArtworkView: (id: string) => void;
-  onArtworkPurchase: (id: string) => void;
+  onArtworkPurchase: (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => void;
 }
 
 const ArtworkGallerySection = ({
@@ -88,7 +94,7 @@ const ArtworkGallerySection = ({
               imageUrls={item.image_urls} 
               isFeatured={item.is_featured || undefined} 
               onView={onArtworkView} 
-              onPurchase={onArtworkPurchase} 
+              onPurchase={(artworkData) => onArtworkPurchase(artworkData)} 
             />
           ))}
         </div>

@@ -45,7 +45,7 @@ const CommissionServicesSection = ({
           dragFree: true,
         }}
       >
-        <CarouselContent className="-ml-2 md:-ml-4">
+        <CarouselContent className="-ml-2 md:-ml-4 p-2">
           {packages.map(pkg => (
             <CarouselItem key={pkg.id} className="pl-2 md:pl-4 basis-4/5 sm:basis-3/5 md:basis-1/2 lg:basis-1/3">
               <CommissionPackageCard 
@@ -72,7 +72,7 @@ const CommissionServicesSection = ({
   }
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 p-2">
       {displayPackages.map(pkg => (
         <CommissionPackageCard 
           key={pkg.id}

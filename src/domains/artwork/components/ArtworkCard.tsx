@@ -17,7 +17,13 @@ interface ArtworkCardProps {
   imageUrls?: string[];
   isFeatured?: boolean;
   onView: (id: string) => void;
-  onPurchase: (id: string) => void;
+  onPurchase: (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => void;
 }
 
 const ArtworkCard = ({
@@ -61,7 +67,13 @@ const ArtworkCard = ({
       
       <Card 
         className="relative bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white rounded-lg overflow-hidden cursor-pointer"
-        onClick={() => price && onPurchase(id)}
+        onClick={() => price && onPurchase({
+          id,
+          title,
+          price,
+          imageUrl,
+          category,
+        })}
       >
         {isFeatured && (
           <div className="absolute top-2 left-2 bg-amber-400 text-zinc-900 font-handwritten px-2 sm:px-3 py-1 rounded-full -rotate-12 text-xs sm:text-sm border-2 border-zinc-900 z-20 shadow-lg">
@@ -73,7 +85,15 @@ const ArtworkCard = ({
           <img
             src={imageUrl}
             alt={title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-48 sm:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+            onLoad={(e) => {
+              e.currentTarget.classList.add('loaded');
+            }}
+            onError={(e) => {
+              e.currentTarget.src = '/placeholder.svg';
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 flex gap-1.5 sm:gap-2">
@@ -105,7 +125,13 @@ const ArtworkCard = ({
                     className="font-handwritten border-2 border-zinc-900 dark:border-white bg-amber-400 text-zinc-900 hover:bg-amber-300 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow touch-target touch-interaction"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onPurchase(id);
+                      if (price) onPurchase({
+                        id,
+                        title,
+                        price,
+                        imageUrl,
+                        category,
+                      });
                     }}
                   >
                     <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-0 sm:mr-1" />

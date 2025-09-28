@@ -168,7 +168,7 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                 id="phone"
                 value={formData.customerPhone}
                 onChange={(e) => handleInputChange("customerPhone", e.target.value)}
-                placeholder="+1 (555) 123-4567"
+                placeholder="+91 98765 43210"
               />
             </div>
           </div>
