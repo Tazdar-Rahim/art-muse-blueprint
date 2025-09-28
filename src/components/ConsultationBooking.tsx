@@ -27,10 +27,80 @@ const ConsultationBooking = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.customerName || !formData.customerEmail || !formData.whatsappNumber) {
+    // Validate required fields
+    if (!formData.customerName.trim() || !formData.customerEmail.trim() || !formData.whatsappNumber.trim()) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(formData.customerEmail.trim())) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate phone number format (basic check for + and digits)
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    const cleanPhone = formData.whatsappNumber.replace(/[\s()-]/g, '');
+    if (!phoneRegex.test(cleanPhone)) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid phone number with country code (e.g., +1234567890).",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate input lengths
+    if (formData.customerName.length > 100) {
+      toast({
+        title: "Name Too Long",
+        description: "Name must be less than 100 characters.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.customerEmail.length > 255) {
+      toast({
+        title: "Email Too Long",
+        description: "Email must be less than 255 characters.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.whatsappNumber.length > 20) {
+      toast({
+        title: "Phone Number Too Long",
+        description: "Phone number must be less than 20 characters.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.preferredTime.length > 200) {
+      toast({
+        title: "Preferred Time Too Long",
+        description: "Preferred time must be less than 200 characters.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.projectDescription.length > 1000) {
+      toast({
+        title: "Description Too Long",
+        description: "Project description must be less than 1000 characters.",
         variant: "destructive"
       });
       return;
@@ -164,6 +234,7 @@ const ConsultationBooking = () => {
                     value={formData.customerName}
                     onChange={(e) => handleInputChange("customerName", e.target.value)}
                     placeholder="Your full name"
+                    maxLength={100}
                     required
                   />
                 </div>
@@ -176,6 +247,7 @@ const ConsultationBooking = () => {
                     value={formData.customerEmail}
                     onChange={(e) => handleInputChange("customerEmail", e.target.value)}
                     placeholder="your.email@example.com"
+                    maxLength={255}
                     required
                   />
                 </div>
@@ -187,6 +259,7 @@ const ConsultationBooking = () => {
                     value={formData.whatsappNumber}
                     onChange={(e) => handleInputChange("whatsappNumber", e.target.value)}
                     placeholder="+1 (555) 123-4567"
+                    maxLength={20}
                     required
                   />
                   <p className="text-xs text-muted-foreground">
@@ -201,6 +274,7 @@ const ConsultationBooking = () => {
                     value={formData.preferredTime}
                     onChange={(e) => handleInputChange("preferredTime", e.target.value)}
                     placeholder="e.g., Weekdays after 6 PM, Saturdays morning"
+                    maxLength={200}
                   />
                   <p className="text-xs text-muted-foreground">
                     Describe your availability (timezone will be confirmed via WhatsApp)
@@ -214,8 +288,12 @@ const ConsultationBooking = () => {
                     value={formData.projectDescription}
                     onChange={(e) => handleInputChange("projectDescription", e.target.value)}
                     placeholder="Briefly describe the artwork you'd like to discuss..."
+                    maxLength={1000}
                     rows={4}
                   />
+                  <div className="text-xs text-muted-foreground text-right">
+                    {formData.projectDescription.length}/1000 characters
+                  </div>
                 </div>
               </div>
 
