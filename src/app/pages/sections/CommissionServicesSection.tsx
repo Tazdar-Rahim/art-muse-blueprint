@@ -72,23 +72,37 @@ const CommissionServicesSection = ({
   }
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 p-2">
-      {displayPackages.map(pkg => (
-        <CommissionPackageCard 
-          key={pkg.id}
-          id={pkg.id} 
-          name={pkg.name} 
-          description={pkg.description} 
-          basePrice={pkg.base_price} 
-          category={pkg.category} 
-          style={pkg.style || undefined} 
-          includes={pkg.includes || undefined} 
-          turnaroundDays={pkg.turnaround_days || undefined} 
-          imageUrl={pkg.image_url || undefined} 
-          onSelect={onPackageSelect} 
-        />
-      ))}
-    </div>
+    <Carousel 
+      className="w-full max-w-5xl mx-auto"
+      opts={{
+        align: "start",
+        slidesToScroll: 1,
+        dragFree: true,
+      }}
+    >
+      <CarouselContent className="-ml-2 md:-ml-4 p-2">
+        {displayPackages.map(pkg => (
+          <CarouselItem key={pkg.id} className="pl-2 md:pl-4 basis-4/5 sm:basis-3/5 md:basis-1/2 lg:basis-1/4">
+            <CommissionPackageCard 
+              id={pkg.id} 
+              name={pkg.name} 
+              description={pkg.description} 
+              basePrice={pkg.base_price} 
+              category={pkg.category} 
+              style={pkg.style || undefined} 
+              includes={pkg.includes || undefined} 
+              turnaroundDays={pkg.turnaround_days || undefined} 
+              imageUrl={pkg.image_url || undefined} 
+              onSelect={onPackageSelect} 
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <div className="hidden sm:block">
+        <CarouselPrevious />
+        <CarouselNext />
+      </div>
+    </Carousel>
   );
 };
 
