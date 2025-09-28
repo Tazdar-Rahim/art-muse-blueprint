@@ -67,10 +67,49 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.customerName || !formData.customerEmail) {
+    // Enhanced validation to match server-side security policies
+    const validationErrors: string[] = [];
+    
+    // Required field validation with trimming
+    if (!formData.customerName?.trim()) {
+      validationErrors.push("Name is required");
+    }
+    if (!formData.customerEmail?.trim()) {
+      validationErrors.push("Email is required");
+    }
+    
+    // Length validation to prevent DoS attacks
+    if (formData.customerName && formData.customerName.length > 100) {
+      validationErrors.push("Name must be less than 100 characters");
+    }
+    if (formData.customerEmail && formData.customerEmail.length > 255) {
+      validationErrors.push("Email must be less than 255 characters");
+    }
+    if (formData.customerPhone && formData.customerPhone.length > 20) {
+      validationErrors.push("Phone number must be less than 20 characters");
+    }
+    if (formData.customRequirements && formData.customRequirements.length > 5000) {
+      validationErrors.push("Requirements must be less than 5000 characters");
+    }
+    
+    // Email format validation
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (formData.customerEmail && !emailRegex.test(formData.customerEmail.trim())) {
+      validationErrors.push("Please enter a valid email address");
+    }
+    
+    // Phone number basic validation (if provided)
+    if (formData.customerPhone && formData.customerPhone.trim()) {
+      const phoneRegex = /^[\+]?[\d\s\-\(\)]+$/;
+      if (!phoneRegex.test(formData.customerPhone.trim())) {
+        validationErrors.push("Please enter a valid phone number");
+      }
+    }
+    
+    if (validationErrors.length > 0) {
       toast({
-        title: "Missing Information",
-        description: "Please provide your name and email.",
+        title: "Validation Error",
+        description: validationErrors.join(". "),
         variant: "destructive"
       });
       return;
@@ -150,6 +189,7 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                   value={formData.customerName}
                   onChange={(e) => handleInputChange("customerName", e.target.value)}
                   placeholder="Your full name"
+                  maxLength={100}
                   required
                 />
               </div>
@@ -162,6 +202,7 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                   value={formData.customerEmail}
                   onChange={(e) => handleInputChange("customerEmail", e.target.value)}
                   placeholder="your.email@example.com"
+                  maxLength={255}
                   required
                 />
               </div>
@@ -174,6 +215,7 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                 value={formData.customerPhone}
                 onChange={(e) => handleInputChange("customerPhone", e.target.value)}
                 placeholder="+91 98765 43210"
+                maxLength={20}
               />
             </div>
           </div>
@@ -216,7 +258,11 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                 onChange={(e) => handleInputChange("customRequirements", e.target.value)}
                 placeholder="Tell us about the artwork you'd like commissioned. Include details about style, colors, size preferences, subjects, mood, or any specific requirements..."
                 rows={5}
+                maxLength={5000}
               />
+              <div className="text-right text-sm text-muted-foreground">
+                {formData.customRequirements.length}/5000 characters
+              </div>
             </div>
           </div>
 
