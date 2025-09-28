@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { FileUpload } from '@/components/ui/file-upload';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import Navigation from '@/components/Navigation';
 
 interface Order {
   id: string;
@@ -89,22 +90,28 @@ export default function Payment() {
     setProcessing(true);
     
     try {
+      console.log('Updating order:', order.id, 'to paid status');
+      
       // Update order payment status
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('orders')
         .update({ 
-          payment_status: 'paid',
-          order_status: 'processing'
+          payment_status: 'paid'
         })
-        .eq('id', order.id);
+        .eq('id', order.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
 
+      console.log('Order updated successfully:', data);
       toast.success('Payment completed successfully!');
       navigate(`/order-success?orderId=${order.id}`);
     } catch (error) {
       console.error('Error updating payment status:', error);
-      toast.error('Failed to process payment');
+      toast.error(`Failed to process payment: ${error.message || 'Unknown error'}`);
     } finally {
       setProcessing(false);
     }
@@ -142,6 +149,13 @@ export default function Payment() {
       </Helmet>
       
       <TooltipProvider>
+        <Navigation activeSection="" onNavigate={(section) => {
+          if (section === "cart") navigate("/cart");
+          else if (section === "wishlist") navigate("/wishlist");
+          else if (section === "my-orders") navigate("/my-orders");
+          else navigate("/");
+        }} />
+        
         <div className="min-h-screen bg-background py-8">
           <div className="container mx-auto px-4 max-w-6xl">
             {/* Header */}

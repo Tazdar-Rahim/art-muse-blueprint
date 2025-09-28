@@ -1,14 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { useCartWishlist } from '@/contexts/CartWishlistContext';
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import Navigation from '@/components/Navigation';
+import ArtworkDetailModal from '@/domains/artwork/components/ArtworkDetailModal';
+import { useArtworkById } from '@/domains/artwork/hooks/useArtwork';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCartWishlist();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart, addToCart } = useCartWishlist();
+  
+  // State for artwork detail modal
+  const [selectedArtworkId, setSelectedArtworkId] = useState<string | null>(null);
+  const [isArtworkModalOpen, setIsArtworkModalOpen] = useState(false);
+
+  // Fetch selected artwork data
+  const { data: artworkResponse } = useArtworkById(selectedArtworkId || "", {
+    enabled: !!selectedArtworkId && isArtworkModalOpen,
+  } as any);
+  const selectedArtwork = artworkResponse?.data;
+
+  const handleArtworkClick = (id: string) => {
+    setSelectedArtworkId(id);
+    setIsArtworkModalOpen(true);
+  };
+
+  const handleArtworkPurchase = (artworkData: {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl?: string;
+    category: string;
+  }) => {
+    addToCart({
+      id: artworkData.id,
+      title: artworkData.title,
+      price: artworkData.price,
+      imageUrl: artworkData.imageUrl,
+      category: artworkData.category,
+    });
+    navigate("/checkout");
+  };
 
   const handleCheckout = () => {
     if (cartItems.length > 0) {
@@ -18,6 +54,13 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation activeSection="" onNavigate={(section) => {
+        if (section === "cart") return;
+        if (section === "wishlist") navigate("/wishlist");
+        else if (section === "my-orders") navigate("/my-orders");
+        else navigate("/");
+      }} />
+      
       <div className="container mx-auto mobile-padding py-6 sm:py-8 pt-20 sm:pt-24">
         {/* Mobile-Enhanced Header */}
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
@@ -64,10 +107,16 @@ const Cart = () => {
                       <img
                         src={item.imageUrl || '/placeholder.svg'}
                         alt={item.title}
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-foreground"
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-foreground cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => handleArtworkClick(item.id)}
                       />
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold font-handwritten text-foreground mobile-text truncate">{item.title}</h3>
+                        <h3 
+                          className="font-bold font-handwritten text-foreground mobile-text truncate cursor-pointer hover:text-primary transition-colors"
+                          onClick={() => handleArtworkClick(item.id)}
+                        >
+                          {item.title}
+                        </h3>
                         <Badge variant="outline" className="font-handwritten mb-2 text-xs">
                           {item.category.replace('_', ' ')}
                         </Badge>
@@ -150,10 +199,31 @@ const Cart = () => {
                 </CardContent>
               </Card>
             </div>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
+
+        {/* Artwork Detail Modal */}
+        <Dialog open={isArtworkModalOpen} onOpenChange={setIsArtworkModalOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            {selectedArtwork && (
+              <ArtworkDetailModal
+                isOpen={isArtworkModalOpen}
+                artwork={selectedArtwork}
+                onClose={() => {
+                  setIsArtworkModalOpen(false);
+                  setSelectedArtworkId(null);
+                }}
+                onPurchase={(artworkData) => {
+                  handleArtworkPurchase(artworkData);
+                  setIsArtworkModalOpen(false);
+                  setSelectedArtworkId(null);
+                }}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
-    </div>
   );
 };
 

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload, Mic, Send, X } from "lucide-react";
+import { useActiveCommissionPackages } from "../hooks/useCommission";
 
 interface CommissionRequestFormProps {
   selectedPackageId?: string;
@@ -20,6 +21,10 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
   const [referenceFiles, setReferenceFiles] = useState<File[]>([]);
   const [voiceNote, setVoiceNote] = useState<File | null>(null);
   const { toast } = useToast();
+  
+  // Fetch active commission packages
+  const { data: packagesResponse, isLoading: packagesLoading } = useActiveCommissionPackages();
+  const packages = packagesResponse?.data || [];
   
   const [formData, setFormData] = useState({
     customerName: "",
@@ -184,12 +189,16 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                   <SelectValue placeholder="Select a commission package or leave blank for custom" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="custom">Custom Commission</SelectItem>
-                  {/* These would be dynamically loaded */}
-                  <SelectItem value="portrait-basic">Portrait Package - Basic (₹12,500)</SelectItem>
-                  <SelectItem value="portrait-premium">Portrait Package - Premium (₹25,000)</SelectItem>
-                  <SelectItem value="landscape">Landscape Commission (₹20,000)</SelectItem>
-                  <SelectItem value="digital">Digital Art Commission (₹8,000)</SelectItem>
+                  <SelectItem value="">Custom Commission</SelectItem>
+                  {packagesLoading ? (
+                    <SelectItem value="loading" disabled>Loading packages...</SelectItem>
+                  ) : (
+                    packages.map((pkg) => (
+                      <SelectItem key={pkg.id} value={pkg.id}>
+                        {pkg.name} - ₹{pkg.base_price}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>

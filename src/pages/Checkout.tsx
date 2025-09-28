@@ -12,6 +12,7 @@ import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { resolveArtworkImages } from '@/lib/artwork-images';
 import CheckoutAuth from '@/components/CheckoutAuth';
+import Navigation from '@/components/Navigation';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -161,6 +162,13 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation activeSection="" onNavigate={(section) => {
+        if (section === "cart") navigate("/cart");
+        else if (section === "wishlist") navigate("/wishlist");
+        else if (section === "my-orders") navigate("/my-orders");
+        else navigate("/");
+      }} />
+      
       <div className="container mx-auto mobile-padding py-6 sm:py-8 pt-20 sm:pt-24">
         {/* Mobile-Enhanced Header */}
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">

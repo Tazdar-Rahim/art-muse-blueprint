@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCartWishlist } from '@/contexts/CartWishlistContext';
 import { ArrowLeft, Heart, ShoppingCart, Trash2 } from 'lucide-react';
+import Navigation from '@/components/Navigation';
 
 const Wishlist = () => {
   const navigate = useNavigate();
@@ -24,6 +25,13 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation activeSection="" onNavigate={(section) => {
+        if (section === "wishlist") return;
+        if (section === "cart") navigate("/cart");
+        else if (section === "my-orders") navigate("/my-orders");
+        else navigate("/");
+      }} />
+      
       <div className="container mx-auto px-4 py-8 pt-24">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">

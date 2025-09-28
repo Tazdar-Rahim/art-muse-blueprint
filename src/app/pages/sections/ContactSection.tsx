@@ -72,7 +72,7 @@ const ContactSection = ({
                 variant="ghost" 
                 size="sm" 
                 className="w-12 h-12 p-0"
-                onClick={() => window.open('https://x.com/artfarhana?s=21&t=djUD1U48Upbdby2Db2YY-w', '_blank')}
+                onClick={() => window.open('https://x.com/artfarhana', '_blank')}
               >
                 <Twitter className="w-5 h-5" />
               </Button>
@@ -111,7 +111,7 @@ const ContactSection = ({
             <Button 
               variant="outline" 
               className="w-full justify-start h-16 text-left" 
-              onClick={() => window.open('/login', '_blank')}
+              onClick={() => navigate("/login")}
             >
               <Search className="w-6 h-6 mr-4 text-gallery-gold" />
               <div>

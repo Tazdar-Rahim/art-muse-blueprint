@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Package, Clock, CheckCircle, XCircle, Eye, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import Navigation from '@/components/Navigation';
 
 interface OrderItem {
   id: string;
@@ -157,7 +158,14 @@ const MyOrders = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <Navigation activeSection="" onNavigate={(section) => {
+        if (section === "my-orders") return;
+        if (section === "cart") navigate("/cart");
+        else if (section === "wishlist") navigate("/wishlist");
+        else navigate("/");
+      }} />
+      
+      <div className="container mx-auto px-4 py-8 max-w-4xl pt-24">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
