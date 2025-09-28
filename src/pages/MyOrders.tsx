@@ -112,17 +112,6 @@ const MyOrders = () => {
     }
   };
 
-  const getPaymentStatusBadgeVariant = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return 'default';
-      case 'pending':
-        return 'destructive';
-      default:
-        return 'outline';
-    }
-  };
-
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
@@ -221,9 +210,6 @@ const MyOrders = () => {
                       <Badge variant={getStatusBadgeVariant(order.order_status)} className="flex items-center gap-1">
                         {getStatusIcon(order.order_status)}
                         {order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1)}
-                      </Badge>
-                      <Badge variant={getPaymentStatusBadgeVariant(order.payment_status)}>
-                        {order.payment_status === 'paid' ? 'Paid' : 'Payment Pending'}
                       </Badge>
                     </div>
                   </div>

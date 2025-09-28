@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCartWishlist } from '@/contexts/CartWishlistContext';
 import { ArrowLeft, Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
+import { resolveArtworkImages } from '@/lib/artwork-images';
 
 const Wishlist = () => {
   const navigate = useNavigate();
@@ -69,15 +70,24 @@ const Wishlist = () => {
           </Card>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {wishlistItems.map((item) => (
-              <Card key={item.id} className="border-2 border-foreground shadow-[2px_2px_0px_0px] shadow-foreground group">
-                <CardContent className="p-4">
-                  <div className="relative mb-4">
-                    <img
-                      src={item.imageUrl || '/placeholder.svg'}
-                      alt={item.title}
-                      className="w-full h-48 object-cover rounded-lg border border-foreground"
-                    />
+            {wishlistItems.map((item) => {
+              const resolvedImages = resolveArtworkImages(item.imageUrl ? [item.imageUrl] : null);
+              const imageUrl = resolvedImages[0] || '/placeholder.svg';
+              
+              return (
+                <Card key={item.id} className="border-2 border-foreground shadow-[2px_2px_0px_0px] shadow-foreground group">
+                  <CardContent className="p-4">
+                    <div className="relative mb-4">
+                      <img
+                        src={imageUrl}
+                        alt={item.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-48 object-cover rounded-lg border border-foreground"
+                        onError={(e) => {
+                          e.currentTarget.src = '/placeholder.svg';
+                        }}
+                      />
                     <Button
                       variant="outline"
                       size="icon"
@@ -109,7 +119,8 @@ const Wishlist = () => {
                   )}
                 </CardContent>
               </Card>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>

@@ -175,7 +175,7 @@ const Checkout = () => {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/cart")}
             className="font-handwritten border-2 border-foreground mobile-shadow shadow-foreground mobile-hover-shadow touch-target touch-interaction"
           >
             <ArrowLeft className="w-4 h-4" />
