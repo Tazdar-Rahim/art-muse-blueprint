@@ -61,7 +61,7 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto p-0 border-2 border-foreground mx-4 sm:mx-auto">
+      <DialogContent className="max-w-4xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto p-0 border-2 border-foreground left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
         <div className="flex flex-col md:grid md:grid-cols-2 gap-0">
           {/* Image Section */}
           <div className="relative">
