@@ -231,7 +231,7 @@ const CommissionRequestForm = ({ selectedPackageId, onSuccess }: CommissionReque
                   <SelectValue placeholder="Select a commission package or leave blank for custom" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Custom Commission</SelectItem>
+                  <SelectItem value="custom">Custom Commission</SelectItem>
                   {packagesLoading ? (
                     <SelectItem value="loading" disabled>Loading packages...</SelectItem>
                   ) : (
