@@ -16,6 +16,7 @@ interface ArtworkCardProps {
   price?: number;
   imageUrls?: string[];
   isFeatured?: boolean;
+  isFullVersion?: boolean; // New prop to determine if this is featured/full version
   onView: (id: string) => void;
   onPurchase: (artworkData: {
     id: string;
@@ -36,6 +37,7 @@ const ArtworkCard = ({
   price,
   imageUrls,
   isFeatured,
+  isFullVersion = false,
   onView,
   onPurchase,
   id
@@ -141,12 +143,37 @@ const ArtworkCard = ({
           </div>
         </div>
         
-        <div className="p-2 space-y-1">
+        <div className={`${isFullVersion ? 'p-4 space-y-3' : 'p-2 space-y-1'}`}>
           <div>
-            <h3 className="text-xs sm:text-sm font-handwritten text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors truncate">
+            <h3 className={`${isFullVersion ? 'text-lg font-bold' : 'text-xs sm:text-sm font-handwritten'} text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors ${isFullVersion ? '' : 'truncate'}`}>
               {title}
             </h3>
+            {isFullVersion && description && (
+              <p className="text-sm text-zinc-600 dark:text-zinc-300 mt-2 line-clamp-2">
+                {description}
+              </p>
+            )}
           </div>
+          
+          {isFullVersion && (medium || style || dimensions) && (
+            <div className="space-y-1">
+              {medium && (
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="font-medium">Medium:</span> {medium}
+                </p>
+              )}
+              {style && (
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="font-medium">Style:</span> {style}
+                </p>
+              )}
+              {dimensions && (
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="font-medium">Dimensions:</span> {dimensions}
+                </p>
+              )}
+            </div>
+          )}
           
           <div className="flex justify-between items-center">
             {category && (
@@ -155,7 +182,7 @@ const ArtworkCard = ({
               </div>
             )}
             {price && (
-              <span className="text-xs sm:text-sm font-handwritten text-amber-600 dark:text-amber-400">₹{price}</span>
+              <span className={`${isFullVersion ? 'text-lg font-bold' : 'text-xs sm:text-sm font-handwritten'} text-amber-600 dark:text-amber-400`}>₹{price}</span>
             )}
           </div>
         </div>

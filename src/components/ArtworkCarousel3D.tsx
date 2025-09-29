@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
-import ArtworkCard from "@/components/ArtworkCard";
+import ArtworkCard from "@/domains/artwork/components/ArtworkCard";
 import { Button } from "@/components/ui/button";
 import { useCartWishlist } from "@/contexts/CartWishlistContext";
 
@@ -122,6 +122,7 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                     price={artwork.price}
                     imageUrls={artwork.image_urls}
                     isFeatured={artwork.is_featured}
+                    isFullVersion={true}
                     onView={onView}
                     onPurchase={(artworkData) => onPurchase(artworkData)}
                   />
