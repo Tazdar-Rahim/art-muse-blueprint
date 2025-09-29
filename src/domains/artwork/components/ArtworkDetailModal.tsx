@@ -61,8 +61,8 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-2 border-foreground">
-        <div className="grid md:grid-cols-2 gap-0">
+      <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto p-0 border-2 border-foreground mx-4 sm:mx-auto">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-0">
           {/* Image Section */}
           <div className="relative">
             <img
@@ -78,15 +78,15 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
           </div>
 
           {/* Details Section */}
-          <div className="p-6 space-y-6">
+          <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold font-handwritten text-foreground pr-8">
+              <DialogTitle className="text-lg sm:text-2xl font-bold font-handwritten text-foreground pr-8">
                 {artwork.title}
               </DialogTitle>
             </DialogHeader>
 
             {artwork.description && (
-              <p className="text-muted-foreground font-handwritten leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground font-handwritten leading-relaxed">
                 {artwork.description}
               </p>
             )}
@@ -136,11 +136,11 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
               <Button
                 onClick={handleAddToWishlist}
                 variant={isInWishlist(artwork.id) ? "default" : "outline"}
-                className="font-handwritten border-2 border-foreground mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all"
+                className="w-full sm:w-auto font-handwritten border-2 border-foreground mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all text-sm"
               >
                 <Heart className={`w-4 h-4 mr-2 ${isInWishlist(artwork.id) ? 'fill-current' : ''}`} />
                 {isInWishlist(artwork.id) ? 'Saved' : 'Save'}
@@ -151,7 +151,7 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
                   <Button
                     onClick={handleAddToCart}
                     variant="secondary"
-                    className="font-handwritten border-2 border-foreground bg-green-500 text-white hover:bg-green-600 mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all"
+                    className="w-full sm:w-auto font-handwritten border-2 border-foreground bg-green-500 text-white hover:bg-green-600 mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all text-sm"
                   >
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Add to Cart
@@ -165,7 +165,7 @@ const ArtworkDetailModal = ({ isOpen, onClose, artwork, onPurchase }: ArtworkDet
                       imageUrl: resolvedImages[0],
                       category: artwork.category,
                     })}
-                    className="font-handwritten border-2 border-foreground bg-amber-400 text-zinc-900 hover:bg-amber-300 mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all"
+                    className="w-full sm:w-auto font-handwritten border-2 border-foreground bg-amber-400 text-zinc-900 hover:bg-amber-300 mobile-shadow shadow-foreground hover:shadow-[2px_2px_0px_0px] hover:shadow-foreground hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all text-sm"
                   >
                     Buy Now
                   </Button>
