@@ -143,7 +143,7 @@ const ArtworkCard = ({
         
         <div className="p-2 space-y-1">
           <div>
-            <h3 className="text-sm font-bold font-handwritten text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors truncate">
+            <h3 className="text-xs sm:text-sm font-handwritten text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors truncate">
               {title}
             </h3>
           </div>
@@ -155,7 +155,7 @@ const ArtworkCard = ({
               </div>
             )}
             {price && (
-              <span className="text-sm font-bold font-handwritten text-amber-600 dark:text-amber-400">₹{price}</span>
+              <span className="text-xs sm:text-sm font-handwritten text-amber-600 dark:text-amber-400">₹{price}</span>
             )}
           </div>
         </div>
