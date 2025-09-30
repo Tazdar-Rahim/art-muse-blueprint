@@ -172,7 +172,7 @@ const ArtworkGallerySection = ({
                   <PaginationLink 
                     onClick={() => handlePageChange(page)}
                     isActive={currentPage === page}
-                    className="cursor-pointer"
+                    className="cursor-pointer min-w-[2.5rem]"
                   >
                     {page}
                   </PaginationLink>

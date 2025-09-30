@@ -68,9 +68,11 @@ const menuItems = [{
     if (window.location.pathname === '/') {
       // Already on homepage, scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsOpen(false);
     } else {
-      // Navigate to home
-      handleNavigation("home");
+      // Navigate to homepage from other pages
+      navigate('/');
+      setIsOpen(false);
     }
   };
   return <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b-2 border-zinc-900 dark:border-white mobile-shadow shadow-zinc-900 dark:shadow-white">
