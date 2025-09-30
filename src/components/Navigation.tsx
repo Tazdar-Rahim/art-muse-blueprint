@@ -91,8 +91,9 @@ const menuItems = [{
     console.log('Logo clicked, current pathname:', location.pathname);
     
     if (location.pathname === '/') {
-      // Already on homepage, scroll to top
-      console.log('Already on homepage, scrolling to top');
+      // Already on homepage, navigate to home section and scroll to top
+      console.log('Already on homepage, navigating to home section and scrolling to top');
+      onNavigate('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setIsOpen(false);
     } else {
