@@ -64,7 +64,8 @@ const menuItems = [{
     setIsOpen(false);
   };
 
-  const handleLogoClick = () => {
+  const handleLogoClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
     if (window.location.pathname === '/') {
       // Already on homepage, scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });

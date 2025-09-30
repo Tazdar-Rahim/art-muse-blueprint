@@ -8,7 +8,7 @@ class ArtworkService extends SupabaseService {
     return this.executeListQuery(async () => {
       let query = this.getClient()
         .from(this.tableName)
-        .select("*");
+        .select("*", { count: "exact" });
 
       // Apply filters
       if (filters) {
