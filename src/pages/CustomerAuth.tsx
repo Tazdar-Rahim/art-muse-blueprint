@@ -18,7 +18,8 @@ const CustomerAuth = () => {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -65,7 +66,7 @@ const CustomerAuth = () => {
     e.preventDefault();
     setLoading(true);
     
-    const { data, error } = await signUp(email, password);
+    const { data, error } = await signUp(email, password, firstName, lastName);
     
     if (error) {
       toast({
@@ -238,20 +239,36 @@ const CustomerAuth = () => {
               <TabsContent value="signup" className="mt-6">
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2 relative rotate-[-0.5deg]">
-                    <Label htmlFor="signup-name" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                    <Label htmlFor="signup-firstname" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      Full Name
+                      First Name
                     </Label>
                     <Input
-                      id="signup-name"
+                      id="signup-firstname"
                       type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter your full name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                      placeholder="Enter your first name"
                       className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
                     />
                   </div>
                   <div className="space-y-2 relative rotate-[0.5deg]">
+                    <Label htmlFor="signup-lastname" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Last Name
+                    </Label>
+                    <Input
+                      id="signup-lastname"
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                      placeholder="Enter your last name"
+                      className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
+                    />
+                  </div>
+                  <div className="space-y-2 relative rotate-[-0.5deg]">
                     <Label htmlFor="signup-email" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
                       <Mail className="w-4 h-4" />
                       Email Address
@@ -266,7 +283,7 @@ const CustomerAuth = () => {
                       className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
                     />
                   </div>
-                  <div className="space-y-2 relative rotate-[-0.5deg]">
+                  <div className="space-y-2 relative rotate-[0.5deg]">
                     <Label htmlFor="signup-password" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
                       <Lock className="w-4 h-4" />
                       Create Password

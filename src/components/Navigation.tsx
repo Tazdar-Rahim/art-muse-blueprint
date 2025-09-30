@@ -3,9 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
-import { Menu, Home, Image, Palette, MessageSquare, ShoppingBag, Phone, ShoppingCart, Heart, LogIn, LogOut, Package } from "lucide-react";
+import { Menu, Home, Image, Palette, MessageSquare, ShoppingBag, Phone, ShoppingCart, Heart, LogIn, LogOut, Package, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { useUserProfile } from "@/hooks/useUserProfile";
 interface NavigationProps {
   activeSection: string;
   onNavigate: (section: string) => void;
@@ -20,6 +21,7 @@ const Navigation = ({
   const location = useLocation();
   const { signOut } = useAuth();
   const { isCustomer, user } = useCustomerAuth();
+  const { displayName } = useUserProfile();
   const [isOpen, setIsOpen] = useState(false);
   const [shouldScrollOnHomepage, setShouldScrollOnHomepage] = useState(false);
 
@@ -142,6 +144,21 @@ const menuItems = [{
 
                 {/* Mobile Menu Items */}
                 <div className="flex flex-col gap-3">
+                  {/* User Profile Display */}
+                  {user && (
+                    <div className="mb-2 p-3 bg-amber-100 dark:bg-zinc-700 border-2 border-zinc-900 dark:border-white rounded-lg mobile-shadow shadow-zinc-900 dark:shadow-white rotate-[-0.5deg]">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-amber-400 border-2 border-zinc-900 dark:border-white rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-zinc-900" />
+                        </div>
+                        <div>
+                          <p className="font-handwritten text-sm text-zinc-600 dark:text-zinc-400">Welcome back!</p>
+                          <p className="font-handwritten font-bold text-base text-zinc-900 dark:text-white">{displayName}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {menuItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = activeSection === item.id;
