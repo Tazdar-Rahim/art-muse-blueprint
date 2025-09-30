@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { SmtpClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 /**
  * IMPORTANT: EMAIL SENDING SETUP REQUIRED
@@ -580,52 +581,51 @@ function getAdminNewCommissionTemplate(data: {
 }
 
 /**
- * PLACEHOLDER EMAIL SENDING FUNCTION
+ * EMAIL SENDING FUNCTION USING GMAIL SMTP
  * 
- * This function currently logs emails to the console instead of sending them.
- * This allows the system to work immediately for testing.
- * 
- * TO ENABLE REAL EMAIL SENDING:
- * Uncomment the Resend implementation below and add your RESEND_API_KEY
+ * This function sends emails via Gmail SMTP using Denomailer.
+ * Uses GMAIL_USER and GMAIL_APP_PASSWORD from Supabase secrets.
  */
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
-  console.log(`
-    ========== EMAIL TO BE SENT ==========
-    To: ${to}
-    Subject: ${subject}
-    HTML: ${html.substring(0, 200)}...
-    =====================================
-  `);
-  
-  // TODO: Uncomment this section once you have Resend set up
-  /*
-  const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-  if (!RESEND_API_KEY) {
-    throw new Error('RESEND_API_KEY not configured');
+  const gmailUser = Deno.env.get('GMAIL_USER');
+  const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
+
+  if (!gmailUser || !gmailPassword) {
+    console.error('Gmail credentials not configured. Please add GMAIL_USER and GMAIL_APP_PASSWORD secrets.');
+    throw new Error('Email service not configured properly');
   }
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: `${FROM_NAME} <${FROM_EMAIL}>`,
-      to: [to],
+  console.log(`Sending email to: ${to}`);
+  console.log(`Subject: ${subject}`);
+
+  try {
+    const client = new SmtpClient();
+
+    // Connect to Gmail SMTP server with TLS
+    await client.connectTLS({
+      hostname: "smtp.gmail.com",
+      port: 465,
+      username: gmailUser,
+      password: gmailPassword,
+    });
+
+    // Send the email
+    await client.send({
+      from: `${FROM_NAME} <${gmailUser}>`,
+      to: to,
       subject: subject,
+      content: html,
       html: html,
-    })
-  });
+    });
 
-  if (!response.ok) {
-    const error = await response.text();
-    console.error('Resend API error:', error);
-    throw new Error(`Failed to send email: ${error}`);
+    // Close the connection
+    await client.close();
+    
+    console.log(`✅ Email sent successfully to: ${to}`);
+  } catch (error) {
+    console.error('❌ Failed to send email:', error);
+    throw error;
   }
-
-  console.log(`Email sent successfully to: ${to}`);
-  */
 }
 
 serve(async (req) => {
