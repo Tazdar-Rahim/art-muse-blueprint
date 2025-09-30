@@ -2,10 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
-import { Eye, Package, Calendar, DollarSign } from 'lucide-react';
+import { Eye, Package, Calendar, DollarSign, Mail, Truck } from 'lucide-react';
 import { Tables } from '@/integrations/supabase/types';
+import { emailService } from '@/services/email.service';
+import { useToast } from '@/hooks/use-toast';
 
 type Order = Tables<'orders'>;
 type OrderItem = Tables<'order_items'>;
@@ -17,6 +23,12 @@ interface OrderWithItems extends Order {
 const Orders = () => {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null);
+  const [orderStatus, setOrderStatus] = useState('');
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [trackingUrl, setTrackingUrl] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchOrders();
@@ -62,6 +74,53 @@ const Orders = () => {
         return 'secondary';
       default:
         return 'destructive';
+    }
+  };
+
+  const handleSendStatusEmail = async () => {
+    if (!selectedOrder) return;
+
+    try {
+      setSendingEmail(true);
+
+      // Update order with tracking info
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update({
+          order_status: orderStatus,
+          tracking_number: trackingNumber || null,
+          tracking_url: trackingUrl || null
+        })
+        .eq('id', selectedOrder.id);
+
+      if (updateError) throw updateError;
+
+      // Send email
+      await emailService.sendOrderStatusUpdate({
+        customerEmail: selectedOrder.customer_email,
+        firstName: selectedOrder.customer_name.split(' ')[0],
+        orderId: selectedOrder.id.substring(0, 8),
+        status: orderStatus,
+        trackingNumber: trackingNumber || undefined,
+        trackingUrl: trackingUrl || undefined
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Order updated and email sent to customer'
+      });
+
+      setSelectedOrder(null);
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to update order:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to send email',
+        variant: 'destructive'
+      });
+    } finally {
+      setSendingEmail(false);
     }
   };
 
@@ -182,7 +241,7 @@ const Orders = () => {
                   </div>
                 </div>
                 
-                {order.order_items.length > 0 && (
+                 {order.order_items.length > 0 && (
                   <div className="mt-4">
                     <h4 className="font-medium mb-2">Order Items</h4>
                     <div className="space-y-2">
@@ -209,6 +268,73 @@ const Orders = () => {
                     </div>
                   </div>
                 )}
+
+                <div className="mt-4 flex gap-2">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setOrderStatus(order.order_status || 'processing');
+                          setTrackingNumber(order.tracking_number || '');
+                          setTrackingUrl(order.tracking_url || '');
+                        }}
+                      >
+                        <Truck className="w-4 h-4 mr-2" />
+                        Update & Email Customer
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Update Order Status</DialogTitle>
+                        <DialogDescription>
+                          Update order status and send notification email to customer
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Order Status</Label>
+                          <Select value={orderStatus} onValueChange={setOrderStatus}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="processing">Processing</SelectItem>
+                              <SelectItem value="shipped">Shipped</SelectItem>
+                              <SelectItem value="delivered">Delivered</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Tracking Number (Optional)</Label>
+                          <Input
+                            value={trackingNumber}
+                            onChange={(e) => setTrackingNumber(e.target.value)}
+                            placeholder="Enter tracking number"
+                          />
+                        </div>
+                        <div>
+                          <Label>Tracking URL (Optional)</Label>
+                          <Input
+                            value={trackingUrl}
+                            onChange={(e) => setTrackingUrl(e.target.value)}
+                            placeholder="https://tracking.example.com/..."
+                          />
+                        </div>
+                        <Button
+                          onClick={handleSendStatusEmail}
+                          disabled={sendingEmail}
+                          className="w-full"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          {sendingEmail ? 'Sending...' : 'Update Order & Send Email'}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </CardContent>
             </Card>
           ))

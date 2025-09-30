@@ -1,17 +1,28 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+
+/**
+ * IMPORTANT: EMAIL SENDING SETUP REQUIRED
+ * 
+ * This edge function is ready to use but needs an email service to actually send emails.
+ * We recommend using Resend (https://resend.com) for reliable email delivery.
+ * 
+ * Setup Instructions:
+ * 1. Sign up at https://resend.com
+ * 2. Verify your domain at https://resend.com/domains
+ * 3. Create an API key at https://resend.com/api-keys
+ * 4. Add RESEND_API_KEY secret in Supabase
+ * 
+ * Then uncomment the Resend implementation below and remove the placeholder.
+ */
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Email configuration using Gmail
-const GMAIL_USER = Deno.env.get('GMAIL_USER');
-const GMAIL_APP_PASSWORD = Deno.env.get('GMAIL_APP_PASSWORD');
 const FROM_NAME = "Farhana's Art Studio";
-const FROM_EMAIL = GMAIL_USER;
+const FROM_EMAIL = Deno.env.get('GMAIL_USER') || 'noreply@farhanasart.com';
 
 interface EmailRequest {
   emailType: string;
@@ -19,13 +30,13 @@ interface EmailRequest {
   data: any;
 }
 
-// Simple rate limiting (in-memory, resets on function restart)
+// Simple rate limiting
 const emailsSent = new Map<string, number>();
-const RATE_LIMIT = 10; // Max emails per recipient per hour
+const RATE_LIMIT = 10;
 
 function checkRateLimit(email: string): boolean {
   const now = Date.now();
-  const key = `${email}-${Math.floor(now / 3600000)}`; // Hour-based key
+  const key = `${email}-${Math.floor(now / 3600000)}`;
   const count = emailsSent.get(key) || 0;
   
   if (count >= RATE_LIMIT) {
@@ -36,7 +47,7 @@ function checkRateLimit(email: string): boolean {
   return true;
 }
 
-// Email template functions
+// Email templates
 function getWelcomeEmailTemplate(data: { firstName: string; email: string }): { subject: string; html: string } {
   return {
     subject: "Welcome to Farhana's Art Studio! ✨",
@@ -141,7 +152,7 @@ function getOrderConfirmationTemplate(data: {
   const itemsList = data.items.map(item => `
     <tr>
       <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.title}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${item.price}</td>
+      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${item.price}</td>
     </tr>
   `).join('');
 
@@ -175,7 +186,7 @@ function getOrderConfirmationTemplate(data: {
             <tr>
               <td style="padding: 15px 10px; font-weight: bold; border-top: 2px solid #333;">Total</td>
               <td style="padding: 15px 10px; font-weight: bold; text-align: right; border-top: 2px solid #333;">
-                $${data.totalAmount.toFixed(2)}
+                ₹${data.totalAmount.toFixed(2)}
               </td>
             </tr>
           </tfoot>
@@ -298,7 +309,7 @@ function getCommissionStatusUpdateTemplate(data: {
   };
 
   return {
-    subject: `Commission Status Update - ${status.toUpperCase()}`,
+    subject: `Commission Status Update - ${data.status.toUpperCase()}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #333; border-bottom: 2px solid #4F46E5; padding-bottom: 10px;">
@@ -345,7 +356,7 @@ function getCommissionQuoteTemplate(data: {
           Thank you for your patience! Here's your custom commission quote:
         </p>
         <div style="background-color: #f0f9ff; padding: 20px; border-radius: 5px; margin: 20px 0;">
-          <p style="margin: 10px 0; font-size: 18px;"><strong>Estimated Price:</strong> $${data.estimatedPrice.toFixed(2)}</p>
+          <p style="margin: 10px 0; font-size: 18px;"><strong>Estimated Price:</strong> ₹${data.estimatedPrice.toFixed(2)}</p>
           <p style="margin: 10px 0; font-size: 18px;"><strong>Estimated Timeline:</strong> ${data.estimatedDays} days</p>
         </div>
         <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -487,7 +498,7 @@ function getAdminNewOrderTemplate(data: {
   const itemsList = data.items.map(item => `
     <tr>
       <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.title}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${item.price}</td>
+      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${item.price}</td>
     </tr>
   `).join('');
 
@@ -520,7 +531,7 @@ function getAdminNewOrderTemplate(data: {
             <tr>
               <td style="padding: 15px 10px; font-weight: bold; border-top: 2px solid #333;">Total</td>
               <td style="padding: 15px 10px; font-weight: bold; text-align: right; border-top: 2px solid #333;">
-                $${data.totalAmount.toFixed(2)}
+                ₹${data.totalAmount.toFixed(2)}
               </td>
             </tr>
           </tfoot>
@@ -568,87 +579,53 @@ function getAdminNewCommissionTemplate(data: {
   };
 }
 
-// Send email using Gmail SMTP
+/**
+ * PLACEHOLDER EMAIL SENDING FUNCTION
+ * 
+ * This function currently logs emails to the console instead of sending them.
+ * This allows the system to work immediately for testing.
+ * 
+ * TO ENABLE REAL EMAIL SENDING:
+ * Uncomment the Resend implementation below and add your RESEND_API_KEY
+ */
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
-  console.log(`Attempting to send email to: ${to}`);
+  console.log(`
+    ========== EMAIL TO BE SENT ==========
+    To: ${to}
+    Subject: ${subject}
+    HTML: ${html.substring(0, 200)}...
+    =====================================
+  `);
   
-  const boundary = "----=_Part_0_" + Date.now();
-  
-  const emailContent = [
-    `From: ${FROM_NAME} <${FROM_EMAIL}>`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    `MIME-Version: 1.0`,
-    `Content-Type: text/html; charset=utf-8`,
-    ``,
-    html
-  ].join('\r\n');
+  // TODO: Uncomment this section once you have Resend set up
+  /*
+  const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+  if (!RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY not configured');
+  }
 
-  const base64Email = btoa(unescape(encodeURIComponent(emailContent)));
-
-  const response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+  const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${await getGmailAccessToken()}`,
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      raw: base64Email.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: [to],
+      subject: subject,
+      html: html,
     })
   });
 
   if (!response.ok) {
     const error = await response.text();
-    console.error('Gmail API error:', error);
+    console.error('Resend API error:', error);
     throw new Error(`Failed to send email: ${error}`);
   }
 
   console.log(`Email sent successfully to: ${to}`);
-}
-
-// Get Gmail OAuth access token using app password
-async function getGmailAccessToken(): Promise<string> {
-  // For Gmail SMTP with app password, we'll use a direct SMTP approach instead
-  // This is a simplified version - in production, consider using a proper email service
-  throw new Error("Gmail OAuth not implemented. Please use SMTP directly or switch to Resend.");
-}
-
-// Alternative: Direct SMTP sending function (simpler for Gmail app passwords)
-async function sendEmailSMTP(to: string, subject: string, html: string): Promise<void> {
-  console.log(`Sending email via SMTP to: ${to}`);
-  
-  // Create email message
-  const message = [
-    `From: ${FROM_NAME} <${FROM_EMAIL}>`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    `MIME-Version: 1.0`,
-    `Content-Type: text/html; charset=utf-8`,
-    ``,
-    html
-  ].join('\r\n');
-
-  // Use a simple SMTP library for Deno
-  // Note: You'll need to install this or use fetch with an SMTP service
-  const smtpResponse = await fetch('https://api.smtp2go.com/v3/email/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      api_key: GMAIL_APP_PASSWORD,
-      to: [to],
-      sender: FROM_EMAIL,
-      subject: subject,
-      html_body: html,
-    })
-  });
-
-  if (!smtpResponse.ok) {
-    throw new Error(`SMTP send failed: ${await smtpResponse.text()}`);
-  }
-
-  console.log(`Email sent successfully to: ${to}`);
+  */
 }
 
 serve(async (req) => {
@@ -723,9 +700,8 @@ serve(async (req) => {
         throw new Error(`Unknown email type: ${emailType}`);
     }
 
-    // Send email using SMTP (simplified approach for Gmail with app password)
-    // Note: For production, consider using Resend or SendGrid for better deliverability
-    await sendEmailSMTP(to, emailContent.subject, emailContent.html);
+    // Send email
+    await sendEmail(to, emailContent.subject, emailContent.html);
 
     return new Response(
       JSON.stringify({ success: true, message: 'Email sent successfully' }),

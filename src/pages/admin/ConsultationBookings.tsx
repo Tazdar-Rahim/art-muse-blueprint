@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Eye, Trash2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Eye, Trash2, Mail, Calendar } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { emailService } from '@/services/email.service';
 
 interface ConsultationBooking {
   id: string;
@@ -27,6 +30,10 @@ const ConsultationBookings = () => {
   const [bookings, setBookings] = useState<ConsultationBooking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<ConsultationBooking | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isRescheduleDialogOpen, setIsRescheduleDialogOpen] = useState(false);
+  const [newDate, setNewDate] = useState('');
+  const [newTime, setNewTime] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -112,6 +119,53 @@ const ConsultationBookings = () => {
     setIsDialogOpen(true);
   };
 
+  const handleSendReschedule = async () => {
+    if (!selectedBooking) return;
+
+    try {
+      setSendingEmail(true);
+
+      const oldDate = selectedBooking.preferred_time || format(new Date(selectedBooking.created_at), 'PPp');
+
+      // Update booking with new schedule
+      const { error: updateError } = await supabase
+        .from('consultation_bookings')
+        .update({
+          preferred_time: newTime,
+          status: 'scheduled'
+        })
+        .eq('id', selectedBooking.id);
+
+      if (updateError) throw updateError;
+
+      // Send reschedule email
+      await emailService.sendConsultationReschedule({
+        email: selectedBooking.customer_email,
+        name: selectedBooking.customer_name,
+        oldDate,
+        newDate,
+        newTime
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Consultation rescheduled and email sent to customer'
+      });
+
+      setIsRescheduleDialogOpen(false);
+      fetchBookings();
+    } catch (error) {
+      console.error('Failed to reschedule:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to send reschedule email',
+        variant: 'destructive'
+      });
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -169,6 +223,55 @@ const ConsultationBookings = () => {
                   <Button size="sm" variant="outline" onClick={() => handleViewDetails(booking)}>
                     <Eye className="w-3 h-3" />
                   </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedBooking(booking);
+                          setNewDate('');
+                          setNewTime('');
+                        }}
+                      >
+                        <Calendar className="w-3 h-3" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Reschedule Consultation</DialogTitle>
+                        <DialogDescription>
+                          Send new schedule to {booking.customer_name}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>New Date</Label>
+                          <Input
+                            type="date"
+                            value={newDate}
+                            onChange={(e) => setNewDate(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label>New Time</Label>
+                          <Input
+                            type="time"
+                            value={newTime}
+                            onChange={(e) => setNewTime(e.target.value)}
+                          />
+                        </div>
+                        <Button
+                          onClick={handleSendReschedule}
+                          disabled={sendingEmail || !newDate || !newTime}
+                          className="w-full"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          {sendingEmail ? 'Sending...' : 'Reschedule & Send Email'}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   <Button size="sm" variant="outline" onClick={() => handleDelete(booking.id)}>
                     <Trash2 className="w-3 h-3" />
                   </Button>

@@ -109,11 +109,13 @@ export type Database = {
       }
       commission_requests: {
         Row: {
+          admin_message: string | null
           created_at: string
           custom_requirements: string | null
           customer_email: string
           customer_name: string
           customer_phone: string | null
+          estimated_days: number | null
           estimated_price: number | null
           id: string
           notes: string | null
@@ -124,11 +126,13 @@ export type Database = {
           voice_note_url: string | null
         }
         Insert: {
+          admin_message?: string | null
           created_at?: string
           custom_requirements?: string | null
           customer_email: string
           customer_name: string
           customer_phone?: string | null
+          estimated_days?: number | null
           estimated_price?: number | null
           id?: string
           notes?: string | null
@@ -139,11 +143,13 @@ export type Database = {
           voice_note_url?: string | null
         }
         Update: {
+          admin_message?: string | null
           created_at?: string
           custom_requirements?: string | null
           customer_email?: string
           customer_name?: string
           customer_phone?: string | null
+          estimated_days?: number | null
           estimated_price?: number | null
           id?: string
           notes?: string | null
@@ -172,6 +178,7 @@ export type Database = {
           notes: string | null
           preferred_time: string | null
           project_description: string | null
+          reminder_sent: boolean | null
           scheduled_datetime: string | null
           status: Database["public"]["Enums"]["consultation_status"] | null
           updated_at: string
@@ -185,6 +192,7 @@ export type Database = {
           notes?: string | null
           preferred_time?: string | null
           project_description?: string | null
+          reminder_sent?: boolean | null
           scheduled_datetime?: string | null
           status?: Database["public"]["Enums"]["consultation_status"] | null
           updated_at?: string
@@ -198,6 +206,7 @@ export type Database = {
           notes?: string | null
           preferred_time?: string | null
           project_description?: string | null
+          reminder_sent?: boolean | null
           scheduled_datetime?: string | null
           status?: Database["public"]["Enums"]["consultation_status"] | null
           updated_at?: string
@@ -261,6 +270,8 @@ export type Database = {
           payment_status: string | null
           shipping_address: Json
           total_amount: number
+          tracking_number: string | null
+          tracking_url: string | null
           updated_at: string
           user_id: string | null
         }
@@ -275,6 +286,8 @@ export type Database = {
           payment_status?: string | null
           shipping_address: Json
           total_amount: number
+          tracking_number?: string | null
+          tracking_url?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -289,6 +302,8 @@ export type Database = {
           payment_status?: string | null
           shipping_address?: Json
           total_amount?: number
+          tracking_number?: string | null
+          tracking_url?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -402,6 +417,10 @@ export type Database = {
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      send_email_notification: {
+        Args: { p_data: Json; p_email_type: string; p_to: string }
+        Returns: undefined
       }
     }
     Enums: {

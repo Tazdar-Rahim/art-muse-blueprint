@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, Trash2, Mail, DollarSign } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { emailService } from '@/services/email.service';
 
 interface CommissionRequest {
   id: string;
@@ -17,6 +21,8 @@ interface CommissionRequest {
   package_id: string | null;
   custom_requirements: string | null;
   estimated_price: number | null;
+  estimated_days: number | null;
+  admin_message: string | null;
   status: string | null;
   notes: string | null;
   reference_images: string[] | null;
@@ -29,6 +35,14 @@ const CommissionRequests = () => {
   const [requests, setRequests] = useState<CommissionRequest[]>([]);
   const [selectedRequest, setSelectedRequest] = useState<CommissionRequest | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isQuoteDialogOpen, setIsQuoteDialogOpen] = useState(false);
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [quotePrice, setQuotePrice] = useState('');
+  const [quoteDays, setQuoteDays] = useState('');
+  const [quoteMessage, setQuoteMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [newStatus, setNewStatus] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -114,6 +128,99 @@ const CommissionRequests = () => {
     setIsDialogOpen(true);
   };
 
+  const handleSendQuote = async () => {
+    if (!selectedRequest) return;
+
+    try {
+      setSendingEmail(true);
+
+      const price = parseFloat(quotePrice);
+      const days = parseInt(quoteDays);
+
+      // Update request with quote info
+      const { error: updateError } = await supabase
+        .from('commission_requests')
+        .update({
+          estimated_price: price,
+          estimated_days: days,
+          admin_message: quoteMessage
+        })
+        .eq('id', selectedRequest.id);
+
+      if (updateError) throw updateError;
+
+      // Send quote email
+      await emailService.sendCommissionQuote({
+        email: selectedRequest.customer_email,
+        name: selectedRequest.customer_name,
+        estimatedPrice: price,
+        estimatedDays: days,
+        message: quoteMessage
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Quote sent successfully to customer'
+      });
+
+      setIsQuoteDialogOpen(false);
+      fetchRequests();
+    } catch (error) {
+      console.error('Failed to send quote:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to send quote',
+        variant: 'destructive'
+      });
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
+  const handleSendStatusUpdate = async () => {
+    if (!selectedRequest) return;
+
+    try {
+      setSendingEmail(true);
+
+      // Update status
+      const { error: updateError } = await supabase
+        .from('commission_requests')
+        .update({
+          status: newStatus as 'pending' | 'in_progress' | 'completed' | 'cancelled',
+          admin_message: statusMessage || null
+        })
+        .eq('id', selectedRequest.id);
+
+      if (updateError) throw updateError;
+
+      // Send status update email
+      await emailService.sendCommissionStatusUpdate({
+        email: selectedRequest.customer_email,
+        name: selectedRequest.customer_name,
+        status: newStatus,
+        message: statusMessage || undefined
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Status updated and email sent to customer'
+      });
+
+      setIsStatusDialogOpen(false);
+      fetchRequests();
+    } catch (error) {
+      console.error('Failed to send status update:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to send status update',
+        variant: 'destructive'
+      });
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -161,6 +268,123 @@ const CommissionRequests = () => {
                   <Button size="sm" variant="outline" onClick={() => handleViewDetails(request)}>
                     <Eye className="w-3 h-3" />
                   </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedRequest(request);
+                          setQuotePrice(request.estimated_price?.toString() || '');
+                          setQuoteDays(request.estimated_days?.toString() || '');
+                          setQuoteMessage(request.admin_message || '');
+                        }}
+                      >
+                        <DollarSign className="w-3 h-3" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Send Commission Quote</DialogTitle>
+                        <DialogDescription>
+                          Send a detailed quote to {request.customer_name}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Estimated Price (₹)</Label>
+                          <Input
+                            type="number"
+                            value={quotePrice}
+                            onChange={(e) => setQuotePrice(e.target.value)}
+                            placeholder="5000"
+                          />
+                        </div>
+                        <div>
+                          <Label>Estimated Days</Label>
+                          <Input
+                            type="number"
+                            value={quoteDays}
+                            onChange={(e) => setQuoteDays(e.target.value)}
+                            placeholder="14"
+                          />
+                        </div>
+                        <div>
+                          <Label>Message to Customer</Label>
+                          <Textarea
+                            value={quoteMessage}
+                            onChange={(e) => setQuoteMessage(e.target.value)}
+                            placeholder="Additional details about the commission..."
+                            rows={4}
+                          />
+                        </div>
+                        <Button
+                          onClick={handleSendQuote}
+                          disabled={sendingEmail || !quotePrice || !quoteDays}
+                          className="w-full"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          {sendingEmail ? 'Sending...' : 'Send Quote Email'}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedRequest(request);
+                          setNewStatus(request.status || 'pending');
+                          setStatusMessage('');
+                        }}
+                      >
+                        <Mail className="w-3 h-3" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Update Status & Notify Customer</DialogTitle>
+                        <DialogDescription>
+                          Update commission status and send notification to {request.customer_name}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>New Status</Label>
+                          <Select value={newStatus} onValueChange={setNewStatus}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">Pending</SelectItem>
+                              <SelectItem value="in_progress">In Progress</SelectItem>
+                              <SelectItem value="completed">Completed</SelectItem>
+                              <SelectItem value="cancelled">Cancelled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label>Message (Optional)</Label>
+                          <Textarea
+                            value={statusMessage}
+                            onChange={(e) => setStatusMessage(e.target.value)}
+                            placeholder="Any additional information for the customer..."
+                            rows={3}
+                          />
+                        </div>
+                        <Button
+                          onClick={handleSendStatusUpdate}
+                          disabled={sendingEmail}
+                          className="w-full"
+                        >
+                          <Mail className="w-4 h-4 mr-2" />
+                          {sendingEmail ? 'Sending...' : 'Update & Send Email'}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   <Button size="sm" variant="outline" onClick={() => handleDelete(request.id)}>
                     <Trash2 className="w-3 h-3" />
                   </Button>
