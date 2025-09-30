@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import FeaturedArtworksSection from "./sections/FeaturedArtworksSection";
@@ -18,6 +18,7 @@ type SectionType = "home" | "gallery" | "commission" | "consultation" | "contact
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeSection, setActiveSection] = useState<SectionType>("home");
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [isCommissionFormOpen, setIsCommissionFormOpen] = useState(false);
@@ -25,6 +26,17 @@ const HomePage = () => {
   const [isArtworkModalOpen, setIsArtworkModalOpen] = useState(false);
   const { toast } = useToast();
   const { addToCart } = useCartWishlist();
+
+  // Handle navigation from other pages with section state
+  useEffect(() => {
+    const state = location.state as { section?: SectionType } | null;
+    if (state?.section) {
+      console.log('Received section from navigation state:', state.section);
+      setActiveSection(state.section);
+      // Clear the state to avoid re-triggering
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Fetch selected artwork data
   const { data: artworkResponse } = useArtworkById(selectedArtworkId || "", {

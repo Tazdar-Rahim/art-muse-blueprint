@@ -61,8 +61,19 @@ const menuItems = [{
     path: "/wishlist"
   }];
   const handleNavigation = (section: string) => {
-    onNavigate(section);
-    setIsOpen(false);
+    console.log('Section clicked:', section, 'Current path:', location.pathname);
+    
+    if (location.pathname !== '/') {
+      // Not on homepage, navigate to homepage first
+      console.log('Navigating to homepage with section:', section);
+      navigate('/', { state: { section } });
+      setIsOpen(false);
+    } else {
+      // Already on homepage, use the onNavigate callback
+      console.log('Already on homepage, calling onNavigate');
+      onNavigate(section);
+      setIsOpen(false);
+    }
   };
 
   const handleSignOut = async () => {
