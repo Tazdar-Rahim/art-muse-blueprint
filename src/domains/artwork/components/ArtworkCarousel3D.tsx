@@ -122,6 +122,7 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                     price={artwork.price}
                     imageUrls={artwork.image_urls}
                     isFeatured={artwork.is_featured}
+                    isFullVersion={true}
                     onView={onView}
                     onPurchase={(artworkData) => onPurchase(artworkData)}
                   />
