@@ -63,11 +63,21 @@ const menuItems = [{
     navigate(path);
     setIsOpen(false);
   };
+
+  const handleLogoClick = () => {
+    if (window.location.pathname === '/') {
+      // Already on homepage, scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Navigate to home
+      handleNavigation("home");
+    }
+  };
   return <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b-2 border-zinc-900 dark:border-white mobile-shadow shadow-zinc-900 dark:shadow-white">
       <div className="container mx-auto mobile-padding">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Creative Logo - Mobile Optimized */}
-          <div className="flex items-center gap-2 sm:gap-3 cursor-pointer group relative touch-target" onClick={() => handleNavigation("home")}>
+          <div className="flex items-center gap-2 sm:gap-3 cursor-pointer group relative touch-target" onClick={handleLogoClick}>
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-400 border-2 border-zinc-900 dark:border-white rounded-full flex items-center justify-center group-hover:rotate-12 transition-transform duration-300 mobile-shadow shadow-zinc-900 dark:shadow-white">
               <Palette className="w-4 h-4 sm:w-6 sm:h-6 text-zinc-900" />
             </div>

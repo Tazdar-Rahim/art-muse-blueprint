@@ -108,9 +108,9 @@ const PrivacyPolicy = () => {
                   If you have any questions about this Privacy Policy, please contact us at:
                 </p>
                 <div className="mt-4 p-4 bg-muted rounded-lg">
-                  <p className="text-foreground font-medium">Tazdar Art Studio</p>
-                  <p className="text-muted-foreground">Email: privacy@tazdarart.com</p>
-                  <p className="text-muted-foreground">Phone: +1 (555) 123-4567</p>
+                  <p className="text-foreground font-medium">Farhana's Art Studio</p>
+                  <p className="text-muted-foreground">Email: farhanashaheenart@gmail.com</p>
+                  <p className="text-muted-foreground">Phone: +91 9401244877</p>
                 </div>
               </section>
             </div>

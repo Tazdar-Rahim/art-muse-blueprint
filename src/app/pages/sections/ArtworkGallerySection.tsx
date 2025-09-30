@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import ArtworkCard from "@/domains/artwork/components/ArtworkCard";
 import { useArtwork } from "@/domains/artwork/hooks/useArtwork";
 import { Search, Filter, Palette } from "lucide-react";
@@ -23,14 +24,40 @@ const ArtworkGallerySection = ({
 }: ArtworkGallerySectionProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 24;
 
-  const { data: artworkResponse, isLoading: artworkLoading } = useArtwork({
-    search: searchQuery || undefined,
-    category: categoryFilter !== "all" ? categoryFilter : undefined,
-    isAvailable: true,
-  });
+  const { data: artworkResponse, isLoading: artworkLoading } = useArtwork(
+    {
+      search: searchQuery || undefined,
+      category: categoryFilter !== "all" ? categoryFilter : undefined,
+      isAvailable: true,
+    },
+    {
+      limit: itemsPerPage,
+      offset: (currentPage - 1) * itemsPerPage,
+    }
+  );
 
   const artwork = artworkResponse?.data || [];
+  const totalCount = artworkResponse?.count || 0;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Reset to page 1 when filters change
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setCategoryFilter(value);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="container mx-auto px-4 pt-24 pb-16 space-y-8">
@@ -49,12 +76,12 @@ const ArtworkGallerySection = ({
             <Input 
               placeholder="Search artworks..." 
               value={searchQuery} 
-              onChange={e => setSearchQuery(e.target.value)} 
+              onChange={e => handleSearchChange(e.target.value)} 
               className="pl-10" 
             />
           </div>
           <div className="flex gap-2">
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <Select value={categoryFilter} onValueChange={handleCategoryChange}>
               <SelectTrigger className="w-40">
                 <Filter className="w-4 h-4 mr-2" />
                 <SelectValue />
@@ -106,6 +133,61 @@ const ArtworkGallerySection = ({
           <h3 className="text-xl font-semibold text-foreground mb-2">No artwork found</h3>
           <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
         </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && !artworkLoading && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+              />
+            </PaginationItem>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              // Show first page, last page, current page, and pages around current
+              const showPage = 
+                page === 1 || 
+                page === totalPages || 
+                (page >= currentPage - 1 && page <= currentPage + 1);
+              
+              const showEllipsis = 
+                (page === currentPage - 2 && currentPage > 3) ||
+                (page === currentPage + 2 && currentPage < totalPages - 2);
+
+              if (showEllipsis) {
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                );
+              }
+
+              if (!showPage) return null;
+
+              return (
+                <PaginationItem key={page}>
+                  <PaginationLink 
+                    onClick={() => handlePageChange(page)}
+                    isActive={currentPage === page}
+                    className="cursor-pointer"
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+            
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
     </div>
   );

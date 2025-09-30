@@ -113,7 +113,7 @@ const Orders = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${orders
+              ₹{orders
                 .filter(order => order.payment_status === 'paid' || order.payment_status === 'completed')
                 .reduce((sum, order) => sum + order.total_amount, 0)
                 .toFixed(2)}
@@ -173,7 +173,7 @@ const Orders = () => {
                   <div>
                     <h4 className="font-medium mb-2">Order Details</h4>
                     <div className="space-y-1 text-sm">
-                      <p><strong>Total Amount:</strong> ${order.total_amount}</p>
+                      <p><strong>Total Amount:</strong> ₹{order.total_amount}</p>
                       <p><strong>Items:</strong> {order.order_items.length}</p>
                       {order.notes && (
                         <p><strong>Notes:</strong> {order.notes}</p>
@@ -203,7 +203,7 @@ const Orders = () => {
                               </p>
                             </div>
                           </div>
-                          <p className="font-medium">${item.price}</p>
+                          <p className="font-medium">₹{item.price}</p>
                         </div>
                       ))}
                     </div>

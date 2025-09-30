@@ -3,7 +3,7 @@ import { Mail, Phone, Instagram, Facebook, Twitter } from "lucide-react";
 const Footer = () => {
   return <footer className="bg-card border-t border-border mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-lg font-handwritten font-bold text-foreground mb-4">Farhana's Art Studio</h3>
@@ -64,18 +64,6 @@ const Footer = () => {
                   About the C.E.O
                 </Link>
               </li>
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Services</h4>
-            <ul className="space-y-2">
-              <li className="text-muted-foreground">Custom Portraits</li>
-              <li className="text-muted-foreground">Landscape Art</li>
-              <li className="text-muted-foreground">Digital Illustrations</li>
-              <li className="text-muted-foreground">Art Consultations</li>
-              <li className="text-muted-foreground">Commissioned Pieces</li>
             </ul>
           </div>
         </div>

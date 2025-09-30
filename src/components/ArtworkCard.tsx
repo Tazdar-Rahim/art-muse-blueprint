@@ -67,13 +67,7 @@ const ArtworkCard = ({
       
       <Card 
         className="relative bg-white dark:bg-zinc-900 border-2 border-zinc-900 dark:border-white rounded-lg overflow-hidden cursor-pointer"
-        onClick={() => price && onPurchase({
-          id,
-          title,
-          price,
-          imageUrl,
-          category,
-        })}
+        onClick={() => onView(id)}
       >
         {isFeatured && (
           <div className="absolute top-2 left-2 bg-amber-400 text-zinc-900 font-handwritten px-2 sm:px-3 py-1 rounded-full -rotate-12 text-xs sm:text-sm border-2 border-zinc-900 z-20 shadow-lg">

@@ -92,13 +92,15 @@ export default function Payment() {
     try {
       console.log('Updating order:', order.id, 'to paid status');
       
-      // Update order payment status
+      // Update order payment status - match by order ID and customer email to bypass RLS issues
       const { data, error } = await supabase
         .from('orders')
         .update({ 
-          payment_status: 'paid'
+          payment_status: 'paid',
+          updated_at: new Date().toISOString()
         })
         .eq('id', order.id)
+        .eq('customer_email', order.customer_email)
         .select();
 
       if (error) {
