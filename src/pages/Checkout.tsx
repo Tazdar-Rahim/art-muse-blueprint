@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ import Navigation from '@/components/Navigation';
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { cartItems, getCartTotal, clearCart } = useCartWishlist();
   const { user } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -131,8 +132,8 @@ const Checkout = () => {
 
       if (itemsError) throw itemsError;
 
-      // Navigate to payment page
-      navigate(`/payment/${order.id}`);
+      // Navigate to payment page with state to track where checkout came from
+      navigate(`/payment/${order.id}`, { state: { from: location.state?.from || '/cart' } });
     } catch (error) {
       console.error('Error creating order:', error);
       toast({
@@ -175,7 +176,7 @@ const Checkout = () => {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => navigate("/cart")}
+            onClick={() => navigate(location.state?.from || '/cart')}
             className="font-handwritten border-2 border-foreground mobile-shadow shadow-foreground mobile-hover-shadow touch-target touch-interaction"
           >
             <ArrowLeft className="w-4 h-4" />

@@ -63,7 +63,7 @@ const HomePage = () => {
       imageUrl: artworkData.imageUrl,
       category: artworkData.category,
     });
-    navigate("/checkout");
+    navigate("/checkout", { state: { from: '/' } });
   };
 
   const handlePackageSelect = (packageId: string) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,6 +34,7 @@ interface OrderItem {
 export default function Payment() {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [qrBlurred, setQrBlurred] = useState(true);
@@ -165,11 +166,14 @@ export default function Payment() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => navigate(-1)}
+                onClick={() => {
+                  const previousPage = (location.state as any)?.from || '/cart';
+                  navigate(previousPage);
+                }}
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back to Checkout
+                Back
               </Button>
               <div>
                 <h1 className="text-3xl font-bold">Complete Payment</h1>

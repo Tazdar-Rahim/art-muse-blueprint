@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -43,12 +43,12 @@ const Cart = () => {
       imageUrl: artworkData.imageUrl,
       category: artworkData.category,
     });
-    navigate("/checkout");
+    navigate("/checkout", { state: { from: '/cart' } });
   };
 
   const handleCheckout = () => {
     if (cartItems.length > 0) {
-      navigate('/checkout');
+      navigate('/checkout', { state: { from: '/cart' } });
     }
   };
 
