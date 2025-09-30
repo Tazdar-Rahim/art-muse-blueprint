@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +17,20 @@ const Navigation = ({
   onNavigate
 }: NavigationProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signOut } = useAuth();
   const { isCustomer, user } = useCustomerAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [shouldScrollOnHomepage, setShouldScrollOnHomepage] = useState(false);
+
+  // Handle scroll after navigation to homepage
+  useEffect(() => {
+    if (shouldScrollOnHomepage && location.pathname === '/') {
+      console.log('Navigation complete, scrolling to top');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setShouldScrollOnHomepage(false);
+    }
+  }, [location.pathname, shouldScrollOnHomepage]);
 const menuItems = [{
     id: "gallery",
     label: "Gallery",
@@ -66,12 +77,17 @@ const menuItems = [{
 
   const handleLogoClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    if (window.location.pathname === '/') {
+    console.log('Logo clicked, current pathname:', location.pathname);
+    
+    if (location.pathname === '/') {
       // Already on homepage, scroll to top
+      console.log('Already on homepage, scrolling to top');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setIsOpen(false);
     } else {
       // Navigate to homepage from other pages
+      console.log('Navigating to homepage');
+      setShouldScrollOnHomepage(true);
       navigate('/');
       setIsOpen(false);
     }
