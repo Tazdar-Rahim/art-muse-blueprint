@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BackgroundPaths } from "@/components/ui/background-paths";
 import { ArrowRight, Palette, Heart, Sparkles } from "lucide-react";
-import artistPortrait from "@/assets/artist-portrait.png";
 interface HeroSectionProps {
   onExploreGallery: () => void;
   onStartCommission: () => void;
@@ -16,19 +15,7 @@ const HeroSection = ({
       
       {/* Mobile-Enhanced Main content */}
       <div className="absolute inset-0 flex items-center justify-center pt-28 sm:pt-40">
-        <div className="container mx-auto mobile-padding text-center z-10 max-w-5xl relative">
-          
-          {/* Artist Portrait - Hidden on mobile, visible on larger screens */}
-          <div className="hidden lg:block absolute -right-8 top-1/2 -translate-y-1/2 z-20">
-            <div className="relative transform rotate-3 animate-float">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-3xl blur-2xl opacity-30"></div>
-              <img 
-                src={artistPortrait} 
-                alt="Farhana - Artist Portrait" 
-                className="relative w-48 h-48 xl:w-56 xl:h-56 object-cover rounded-3xl border-4 border-foreground mobile-shadow shadow-foreground/40 bg-white"
-              />
-            </div>
-          </div>
+        <div className="container mx-auto mobile-padding text-center z-10 max-w-5xl">
           
           {/* Mobile-Optimized Floating decorative elements */}
           <div className="absolute top-4 sm:top-8 left-4 sm:left-8 opacity-40 animate-float hidden sm:block">
