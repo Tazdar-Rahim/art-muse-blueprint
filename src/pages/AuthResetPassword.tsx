@@ -25,39 +25,47 @@ const AuthResetPassword = () => {
 
   useEffect(() => {
     const verifyResetToken = async () => {
-      // Parse URL fragment parameters (Supabase sends tokens as fragments, not query params)
-      const parseUrlFragment = () => {
-        const hash = window.location.hash.substring(1); // Remove the # symbol
-        const params = new URLSearchParams(hash);
-        return {
-          access_token: params.get('access_token'),
-          refresh_token: params.get('refresh_token'),
-          type: params.get('type')
-        };
-      };
-
-      const fragmentParams = parseUrlFragment();
-      
-      // Also check query parameters as fallback
-      const urlParams = new URLSearchParams(window.location.search);
-      const token_hash = urlParams.get('token_hash');
-      const query_type = urlParams.get('type');
-
-      console.log('Fragment params:', fragmentParams);
-      console.log('Query params:', { token_hash, type: query_type });
-
-      // Check if we have the required parameters
-      if (!fragmentParams.access_token && !token_hash) {
-        setStatus('error');
-        setMessage('Invalid password reset link. Please request a new password reset.');
-        return;
-      }
-
       try {
-        // Get current session - Supabase automatically handles the token from the URL
+        // First, check if we have a hash in the URL (Supabase new flow)
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+        const type = hashParams.get('type');
+
+        // Also check query parameters (Supabase old flow)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenHash = urlParams.get('token_hash');
+        const queryType = urlParams.get('type');
+
+        console.log('URL Hash params:', { accessToken: !!accessToken, refreshToken: !!refreshToken, type });
+        console.log('URL Query params:', { tokenHash: !!tokenHash, type: queryType });
+
+        // If we have access_token and refresh_token in the hash, use them to set the session
+        if (accessToken && refreshToken && type === 'recovery') {
+          console.log('Setting session from hash tokens...');
+          
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+
+          if (error) {
+            console.error('Error setting session:', error);
+            setStatus('error');
+            setMessage('Invalid or expired reset link. Please request a new one.');
+            return;
+          }
+
+          if (data.session) {
+            console.log('Session set successfully');
+            setStatus('ready');
+            setMessage('Please enter your new password below.');
+            return;
+          }
+        }
+
+        // Fallback: Check if we already have a session (token was already processed)
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        
-        console.log('Session data:', sessionData);
         
         if (sessionError) {
           console.error('Session error:', sessionError);
@@ -67,12 +75,24 @@ const AuthResetPassword = () => {
         }
 
         if (sessionData.session && sessionData.session.user) {
+          console.log('Existing session found');
           setStatus('ready');
           setMessage('Please enter your new password below.');
-        } else {
-          setStatus('error');
-          setMessage('Unable to verify reset link. Please try clicking the link again or request a new one.');
+          return;
         }
+
+        // If no tokens found at all
+        if (!accessToken && !tokenHash) {
+          console.log('No reset tokens found in URL');
+          setStatus('error');
+          setMessage('Invalid password reset link. Please request a new password reset.');
+          return;
+        }
+
+        // If we reach here, something went wrong
+        setStatus('error');
+        setMessage('Unable to verify reset link. Please try clicking the link again or request a new one.');
+        
       } catch (err) {
         console.error('Unexpected error during token verification:', err);
         setStatus('error');

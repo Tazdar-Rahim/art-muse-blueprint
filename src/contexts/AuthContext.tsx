@@ -80,7 +80,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetPassword = async (email: string) => {
+    // Use the exact full URL to ensure Supabase can properly redirect
     const redirectUrl = `${window.location.origin}/auth/reset-password`;
+    
+    console.log('Sending password reset to:', email, 'with redirect:', redirectUrl);
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: redirectUrl
