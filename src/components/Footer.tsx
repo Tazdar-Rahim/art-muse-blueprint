@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Phone, Instagram, Facebook, Twitter } from "lucide-react";
 const Footer = () => {
+  const navigate = useNavigate();
   return <footer className="bg-card border-t border-border mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -40,24 +41,36 @@ const Footer = () => {
             <h4 className="font-semibold text-foreground mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
+                <button 
+                  onClick={() => navigate("/", { state: { section: "home" } })} 
+                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                >
                   Home
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/?section=gallery" className="text-muted-foreground hover:text-primary transition-colors">
+                <button 
+                  onClick={() => navigate("/", { state: { section: "gallery" } })} 
+                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                >
                   Gallery
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/?section=commission" className="text-muted-foreground hover:text-primary transition-colors">
+                <button 
+                  onClick={() => navigate("/", { state: { section: "commission" } })} 
+                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                >
                   Commissions
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/?section=consultation" className="text-muted-foreground hover:text-primary transition-colors">
+                <button 
+                  onClick={() => navigate("/", { state: { section: "consultation" } })} 
+                  className="text-muted-foreground hover:text-primary transition-colors text-left"
+                >
                   Consultation
-                </Link>
+                </button>
               </li>
               <li>
                 <Link to="/about-ceo" className="text-muted-foreground hover:text-primary transition-colors">
