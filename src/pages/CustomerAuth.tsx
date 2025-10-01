@@ -142,7 +142,7 @@ const CustomerAuth = () => {
           <CardHeader className="text-center">
             <CardTitle className="font-handwritten text-2xl text-zinc-900 dark:text-white flex items-center justify-center gap-2">
               <Sparkles className="w-6 h-6 text-amber-500" />
-              Welcome Artist Lover!
+              Welcome to Farhana's Art studio
               <Sparkles className="w-6 h-6 text-amber-500" />
             </CardTitle>
             <CardDescription className="font-handwritten text-base text-zinc-600 dark:text-zinc-400">
