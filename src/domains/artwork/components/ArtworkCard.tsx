@@ -83,7 +83,7 @@ const ArtworkCard = ({
             alt={title}
             loading="lazy"
             decoding="async"
-            className="w-full h-48 sm:h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-60 sm:h-72 object-cover transition-transform duration-700 group-hover:scale-110"
             onLoad={(e) => {
               e.currentTarget.classList.add('loaded');
             }}
@@ -91,7 +91,7 @@ const ArtworkCard = ({
               e.currentTarget.src = '/placeholder.svg';
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="absolute bottom-2 left-2 right-2 flex gap-1 sm:gap-1">
               <Button
                 size="sm"

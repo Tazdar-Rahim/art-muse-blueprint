@@ -35,7 +35,7 @@ const FeaturedArtworksSection = ({
       {artworkLoading ? (
         <div className="flex justify-center items-center h-[500px] sm:h-[600px]">
           <div className="animate-pulse space-y-4">
-            <Card className="w-80 h-96 bg-muted" />
+            <Card className="w-[350px] h-[450px] bg-muted" />
             <div className="flex gap-4 justify-center">
               <div className="w-12 h-12 bg-muted rounded-full" />
               <div className="w-12 h-12 bg-muted rounded-full" />

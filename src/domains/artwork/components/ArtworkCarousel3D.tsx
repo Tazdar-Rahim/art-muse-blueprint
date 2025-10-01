@@ -88,9 +88,9 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
       {/* Mobile-Enhanced 3D Carousel Container */}
       <div 
         ref={carouselRef}
-        className="relative h-80 sm:h-96 overflow-visible mx-auto mobile-padding"
+        className="relative h-[500px] sm:h-[600px] overflow-visible mx-auto mobile-padding"
         style={{ 
-          perspective: "800px",
+          perspective: "1000px",
           perspectiveOrigin: "center center"
         }}
       >
@@ -104,12 +104,12 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
                 opacity: getCardOpacity(index),
                 zIndex: getCardZIndex(index),
                 transformStyle: "preserve-3d",
-                width: "280px", // Smaller for mobile
+                width: "350px", // Larger for better image display
                 maxWidth: "90vw", // Responsive width
               }}
             >
               {/* Mobile-Optimized Cards */}
-              <div className="transform scale-75 sm:scale-90 origin-center">
+              <div className="transform scale-90 sm:scale-100 origin-center">
                 <div className="relative">
                   <ArtworkCard
                     id={artwork.id}
