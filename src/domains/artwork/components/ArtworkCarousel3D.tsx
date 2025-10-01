@@ -63,12 +63,12 @@ const ArtworkCarousel3D = ({ artworks, onView, onPurchase }: ArtworkCarousel3DPr
   return (
     <div className="relative w-full">
       {/* Swipe-Enabled Carousel Container */}
-      <div className="overflow-hidden px-4 sm:px-8" ref={emblaRef}>
-        <div className="flex touch-pan-y gap-4 sm:gap-6">
+      <div className="overflow-hidden px-6 sm:px-12" ref={emblaRef}>
+        <div className="flex touch-pan-y gap-6 sm:gap-8">
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
-              className="flex-[0_0_85%] sm:flex-[0_0_400px] min-w-0"
+              className="flex-[0_0_70%] sm:flex-[0_0_320px] min-w-0"
             >
               <div className="relative">
                 <ArtworkCard

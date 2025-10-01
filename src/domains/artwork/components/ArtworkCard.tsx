@@ -83,7 +83,7 @@ const ArtworkCard = ({
             alt={title}
             loading="lazy"
             decoding="async"
-            className="w-full h-60 sm:h-72 object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-48 sm:h-56 object-cover transition-transform duration-700 group-hover:scale-110"
             onLoad={(e) => {
               e.currentTarget.classList.add('loaded');
             }}
@@ -137,7 +137,7 @@ const ArtworkCard = ({
           </div>
         </div>
         
-        <div className={`${isFullVersion ? 'p-4 space-y-3' : 'p-2 space-y-1'}`}>
+        <div className={`${isFullVersion ? 'p-3 space-y-2' : 'p-2 space-y-1'}`}>
           <div>
             <h3 className={`${isFullVersion ? 'text-lg font-bold' : 'text-xs sm:text-sm font-handwritten'} text-zinc-900 dark:text-white group-hover:text-amber-500 transition-colors ${isFullVersion ? '' : 'truncate'}`}>
               {title}
