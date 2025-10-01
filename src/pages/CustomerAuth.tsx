@@ -9,13 +9,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Palette, ArrowLeft, Mail, Lock, User, Sparkles, Eye, EyeOff } from "lucide-react";
-
 const CustomerAuth = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, user } = useAuth();
-  const { isCustomer } = useCustomerAuth();
-  const { toast } = useToast();
-  
+  const {
+    signIn,
+    signUp,
+    user
+  } = useAuth();
+  const {
+    isCustomer
+  } = useCustomerAuth();
+  const {
+    toast
+  } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -29,85 +35,75 @@ const CustomerAuth = () => {
       navigate("/");
     }
   }, [user, navigate]);
-
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    const { error } = await signIn(email, password);
-    
+    const {
+      error
+    } = await signIn(email, password);
     if (error) {
       let errorMessage = error.message;
       let errorTitle = "Error";
-      
+
       // Handle specific error cases
       if (error.message === "Invalid login credentials") {
         errorTitle = "Sign In Failed";
         errorMessage = "Please check your email and password. If you just signed up, make sure to confirm your email address first.";
       }
-      
       toast({
         title: errorTitle,
         description: errorMessage,
-        variant: "destructive",
+        variant: "destructive"
       });
     } else {
       toast({
         title: "Welcome back!",
-        description: "You have been signed in successfully.",
+        description: "You have been signed in successfully."
       });
       navigate("/");
     }
-    
     setLoading(false);
   };
-
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    const { data, error } = await signUp(email, password, firstName, lastName);
-    
+    const {
+      data,
+      error
+    } = await signUp(email, password, firstName, lastName);
     if (error) {
       toast({
         title: "Error",
         description: error.message,
-        variant: "destructive",
+        variant: "destructive"
       });
     } else {
       // Check if user was created or already exists
       if (data?.user && !data.session) {
         toast({
           title: "Check Your Email!",
-          description: "We've sent you a confirmation link. Please check your email and click the link to verify your account before signing in.",
+          description: "We've sent you a confirmation link. Please check your email and click the link to verify your account before signing in."
         });
       } else if (data?.session) {
         toast({
           title: "Account created!",
-          description: "You have been signed up and logged in successfully.",
+          description: "You have been signed up and logged in successfully."
         });
         navigate("/");
       } else {
         toast({
           title: "Account Created",
-          description: "Please check your email to verify your account before signing in.",
+          description: "Please check your email to verify your account before signing in."
         });
       }
     }
-    
     setLoading(false);
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 flex items-center justify-center p-4">
+  return <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
         {/* Creative Back Button */}
         <div className="flex justify-start">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate("/")}
-            className="font-handwritten border-2 border-zinc-900 dark:border-white bg-white dark:bg-zinc-800 hover:bg-amber-100 dark:hover:bg-zinc-700 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow transition-all duration-200 rounded-lg rotate-[-1deg] hover:rotate-0"
-          >
+          <Button variant="ghost" onClick={() => navigate("/")} className="font-handwritten border-2 border-zinc-900 dark:border-white bg-white dark:bg-zinc-800 hover:bg-amber-100 dark:hover:bg-zinc-700 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow transition-all duration-200 rounded-lg rotate-[-1deg] hover:rotate-0">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Gallery ✨
           </Button>
@@ -152,24 +148,16 @@ const CustomerAuth = () => {
             <CardDescription className="font-handwritten text-base text-zinc-600 dark:text-zinc-400">
               Sign in to track your orders or create an account to get started.
               <br />
-              <span className="text-sm text-orange-600 dark:text-orange-400 mt-2 block font-medium">
-                📧 New users: Check your email after signing up to confirm your account.
-              </span>
+              
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-amber-100 dark:bg-zinc-700 border-2 border-zinc-900 dark:border-white rounded-lg">
-                <TabsTrigger 
-                  value="signin" 
-                  className="font-handwritten data-[state=active]:bg-amber-400 data-[state=active]:text-zinc-900 data-[state=active]:border-2 data-[state=active]:border-zinc-900 data-[state=active]:shadow-sm"
-                >
+                <TabsTrigger value="signin" className="font-handwritten data-[state=active]:bg-amber-400 data-[state=active]:text-zinc-900 data-[state=active]:border-2 data-[state=active]:border-zinc-900 data-[state=active]:shadow-sm">
                   Sign In 🔑
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="signup" 
-                  className="font-handwritten data-[state=active]:bg-amber-400 data-[state=active]:text-zinc-900 data-[state=active]:border-2 data-[state=active]:border-zinc-900 data-[state=active]:shadow-sm"
-                >
+                <TabsTrigger value="signup" className="font-handwritten data-[state=active]:bg-amber-400 data-[state=active]:text-zinc-900 data-[state=active]:border-2 data-[state=active]:border-zinc-900 data-[state=active]:shadow-sm">
                   Sign Up ✨
                 </TabsTrigger>
               </TabsList>
@@ -181,15 +169,7 @@ const CustomerAuth = () => {
                       <Mail className="w-4 h-4" />
                       Email Address
                     </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      placeholder="your@email.com"
-                      className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
-                    />
+                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="your@email.com" className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg" />
                   </div>
                   <div className="space-y-2 relative rotate-[-0.5deg]">
                     <Label htmlFor="password" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -197,39 +177,18 @@ const CustomerAuth = () => {
                       Password
                     </Label>
                     <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        placeholder="Enter your password"
-                        className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg pr-10"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
+                      <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} required placeholder="Enter your password" className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg pr-10" />
+                      <Button type="button" variant="ghost" size="sm" className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent" onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full font-handwritten text-lg border-2 border-zinc-900 dark:border-white bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-zinc-900 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow transition-all duration-200 rounded-lg rotate-[0.5deg] hover:rotate-0" 
-                    disabled={loading}
-                  >
+                  <Button type="submit" className="w-full font-handwritten text-lg border-2 border-zinc-900 dark:border-white bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-zinc-900 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow transition-all duration-200 rounded-lg rotate-[0.5deg] hover:rotate-0" disabled={loading}>
                     {loading ? "Signing in... 🎨" : "Sign In & Explore! 🚀"}
                   </Button>
                   
                   <div className="text-center">
-                    <Link 
-                      to="/forgot-password" 
-                      className="text-sm font-handwritten text-primary hover:text-primary/80 transition-colors"
-                    >
+                    <Link to="/forgot-password" className="text-sm font-handwritten text-primary hover:text-primary/80 transition-colors">
                       Forgot your password?
                     </Link>
                   </div>
@@ -243,45 +202,21 @@ const CustomerAuth = () => {
                       <User className="w-4 h-4" />
                       First Name
                     </Label>
-                    <Input
-                      id="signup-firstname"
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                      placeholder="Enter your first name"
-                      className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
-                    />
+                    <Input id="signup-firstname" type="text" value={firstName} onChange={e => setFirstName(e.target.value)} required placeholder="Enter your first name" className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg" />
                   </div>
                   <div className="space-y-2 relative rotate-[0.5deg]">
                     <Label htmlFor="signup-lastname" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
                       <User className="w-4 h-4" />
                       Last Name
                     </Label>
-                    <Input
-                      id="signup-lastname"
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                      placeholder="Enter your last name"
-                      className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
-                    />
+                    <Input id="signup-lastname" type="text" value={lastName} onChange={e => setLastName(e.target.value)} required placeholder="Enter your last name" className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg" />
                   </div>
                   <div className="space-y-2 relative rotate-[-0.5deg]">
                     <Label htmlFor="signup-email" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
                       <Mail className="w-4 h-4" />
                       Email Address
                     </Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      placeholder="your@email.com"
-                      className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg"
-                    />
+                    <Input id="signup-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="your@email.com" className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg" />
                   </div>
                   <div className="space-y-2 relative rotate-[0.5deg]">
                     <Label htmlFor="signup-password" className="font-handwritten text-base text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -289,31 +224,13 @@ const CustomerAuth = () => {
                       Create Password
                     </Label>
                     <div className="relative">
-                      <Input
-                        id="signup-password"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        placeholder="Create a secure password"
-                        className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg pr-10"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
+                      <Input id="signup-password" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} required placeholder="Create a secure password" className="font-handwritten border-2 border-zinc-900 dark:border-white focus:border-amber-500 focus:ring-amber-500 bg-white dark:bg-zinc-800 rounded-lg pr-10" />
+                      <Button type="button" variant="ghost" size="sm" className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent" onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
                     </div>
                   </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full font-handwritten text-lg border-2 border-zinc-900 dark:border-white bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-zinc-900 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow transition-all duration-200 rounded-lg rotate-[-0.5deg] hover:rotate-0" 
-                    disabled={loading}
-                  >
+                  <Button type="submit" className="w-full font-handwritten text-lg border-2 border-zinc-900 dark:border-white bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-zinc-900 mobile-shadow shadow-zinc-900 dark:shadow-white mobile-hover-shadow transition-all duration-200 rounded-lg rotate-[-0.5deg] hover:rotate-0" disabled={loading}>
                     {loading ? "Creating account... 🎨" : "Join the Art Community! 🎭"}
                   </Button>
                 </form>
@@ -329,8 +246,6 @@ const CustomerAuth = () => {
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default CustomerAuth;
