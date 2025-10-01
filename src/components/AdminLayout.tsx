@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut, Settings, Package, Image, FileText, Calendar, ShoppingBag } from 'lucide-react';
+import { LogOut, Settings, Package, Image, FileText, Calendar, ShoppingBag, Mail } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,6 +50,7 @@ const AdminLayout = () => {
     { name: 'Commission Requests', href: '/admin/requests', icon: FileText },
     { name: 'Consultation Bookings', href: '/admin/bookings', icon: Calendar },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
+    { name: 'Email Management', href: '/admin/emails', icon: Mail },
   ];
 
   return (

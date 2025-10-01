@@ -38,6 +38,7 @@ const CommissionPackages = lazy(() => import("./pages/admin/CommissionPackages")
 const CommissionRequests = lazy(() => import("./pages/admin/CommissionRequests"));
 const ConsultationBookings = lazy(() => import("./pages/admin/ConsultationBookings"));
 const Orders = lazy(() => import("./pages/admin/Orders"));
+const EmailManagement = lazy(() => import("./pages/admin/EmailManagement"));
 
 const queryClient = new QueryClient();
 
@@ -105,6 +106,7 @@ const App = () => (
                   <Route path="requests" element={<CommissionRequests />} />
                   <Route path="bookings" element={<ConsultationBookings />} />
                   <Route path="orders" element={<Orders />} />
+                  <Route path="emails" element={<EmailManagement />} />
                 </Route>
                 <Route path="/about-ceo" element={<AboutCEO />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />

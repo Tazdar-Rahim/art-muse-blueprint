@@ -214,6 +214,87 @@ export type Database = {
         }
         Relationships: []
       }
+      email_logs: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          id: string
+          recipient: string
+          sent_at: string | null
+          status: string | null
+          subject: string
+          template_key: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          recipient: string
+          sent_at?: string | null
+          status?: string | null
+          subject: string
+          template_key?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          recipient?: string
+          sent_at?: string | null
+          status?: string | null
+          subject?: string
+          template_key?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          category: string
+          created_at: string | null
+          default_html_content: string
+          default_subject: string
+          description: string | null
+          html_content: string
+          id: string
+          is_enabled: boolean | null
+          name: string
+          subject: string
+          template_key: string
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          default_html_content: string
+          default_subject: string
+          description?: string | null
+          html_content: string
+          id?: string
+          is_enabled?: boolean | null
+          name: string
+          subject: string
+          template_key: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          default_html_content?: string
+          default_subject?: string
+          description?: string | null
+          html_content?: string
+          id?: string
+          is_enabled?: boolean | null
+          name?: string
+          subject?: string
+          template_key?: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           artwork_category: string

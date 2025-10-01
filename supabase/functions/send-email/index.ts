@@ -581,6 +581,62 @@ function getAdminNewCommissionTemplate(data: {
 }
 
 /**
+ * FETCH EMAIL TEMPLATE FROM DATABASE
+ * 
+ * Fetches the email template from the database and replaces variables
+ */
+async function getEmailTemplate(templateKey: string, variables: any): Promise<{ subject: string; html: string }> {
+  const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+  const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error('Supabase configuration missing');
+    throw new Error('Email service not configured properly');
+  }
+
+  try {
+    // Fetch template from database
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/email_templates?template_key=eq.${templateKey}&is_enabled=eq.true&select=*`,
+      {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch email template');
+    }
+
+    const templates = await response.json();
+    
+    if (!templates || templates.length === 0) {
+      throw new Error(`Email template '${templateKey}' not found or disabled`);
+    }
+
+    const template = templates[0];
+    let { subject, html_content } = template;
+
+    // Replace variables in subject and content
+    if (variables) {
+      Object.keys(variables).forEach((key) => {
+        const value = variables[key] || '';
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        subject = subject.replace(regex, value);
+        html_content = html_content.replace(regex, value);
+      });
+    }
+
+    return { subject, html: html_content };
+  } catch (error) {
+    console.error('Error fetching email template:', error);
+    throw error;
+  }
+}
+
+/**
  * EMAIL SENDING FUNCTION USING GMAIL SMTP
  * 
  * This function sends emails via Gmail SMTP using Denomailer.
@@ -634,6 +690,9 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+  const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
   try {
     const { emailType, to, data }: EmailRequest = await req.json();
 
@@ -656,52 +715,83 @@ serve(async (req) => {
     // Get email template based on type
     let emailContent: { subject: string; html: string };
 
-    switch (emailType) {
-      case 'welcome':
-        emailContent = getWelcomeEmailTemplate(data);
-        break;
-      case 'email_verification':
-        emailContent = getEmailVerificationTemplate(data);
-        break;
-      case 'password_reset':
-        emailContent = getPasswordResetTemplate(data);
-        break;
-      case 'order_confirmation':
-        emailContent = getOrderConfirmationTemplate(data);
-        break;
-      case 'order_status_update':
-        emailContent = getOrderStatusUpdateTemplate(data);
-        break;
-      case 'commission_request_confirmation':
-        emailContent = getCommissionRequestConfirmationTemplate(data);
-        break;
-      case 'commission_status_update':
-        emailContent = getCommissionStatusUpdateTemplate(data);
-        break;
-      case 'commission_quote':
-        emailContent = getCommissionQuoteTemplate(data);
-        break;
-      case 'consultation_booking':
-        emailContent = getConsultationBookingTemplate(data);
-        break;
-      case 'consultation_reminder':
-        emailContent = getConsultationReminderTemplate(data);
-        break;
-      case 'consultation_reschedule':
-        emailContent = getConsultationRescheduleTemplate(data);
-        break;
-      case 'admin_new_order':
-        emailContent = getAdminNewOrderTemplate(data);
-        break;
-      case 'admin_new_commission':
-        emailContent = getAdminNewCommissionTemplate(data);
-        break;
-      default:
-        throw new Error(`Unknown email type: ${emailType}`);
+    // Try to fetch from database first
+    try {
+      emailContent = await getEmailTemplate(emailType, data);
+      console.log(`✅ Using database template for: ${emailType}`);
+    } catch (dbError) {
+      console.log(`⚠️ Database template failed, using fallback for: ${emailType}`);
+      // Fallback to hardcoded templates
+      switch (emailType) {
+        case 'welcome':
+          emailContent = getWelcomeEmailTemplate(data);
+          break;
+        case 'email_verification':
+          emailContent = getEmailVerificationTemplate(data);
+          break;
+        case 'password_reset':
+          emailContent = getPasswordResetTemplate(data);
+          break;
+        case 'order_confirmation':
+          emailContent = getOrderConfirmationTemplate(data);
+          break;
+        case 'order_status_update':
+          emailContent = getOrderStatusUpdateTemplate(data);
+          break;
+        case 'commission_request_confirmation':
+          emailContent = getCommissionRequestConfirmationTemplate(data);
+          break;
+        case 'commission_status_update':
+          emailContent = getCommissionStatusUpdateTemplate(data);
+          break;
+        case 'commission_quote':
+          emailContent = getCommissionQuoteTemplate(data);
+          break;
+        case 'consultation_booking':
+          emailContent = getConsultationBookingTemplate(data);
+          break;
+        case 'consultation_reminder':
+          emailContent = getConsultationReminderTemplate(data);
+          break;
+        case 'consultation_reschedule':
+          emailContent = getConsultationRescheduleTemplate(data);
+          break;
+        case 'admin_new_order':
+          emailContent = getAdminNewOrderTemplate(data);
+          break;
+        case 'admin_new_commission':
+          emailContent = getAdminNewCommissionTemplate(data);
+          break;
+        default:
+          throw new Error(`Unknown email type: ${emailType}`);
+      }
     }
 
     // Send email
     await sendEmail(to, emailContent.subject, emailContent.html);
+
+    // Log success to database
+    if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/email_logs`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({
+            template_key: emailType,
+            recipient: to,
+            subject: emailContent.subject,
+            status: 'sent',
+          }),
+        });
+      } catch (logError) {
+        console.error('Failed to log email:', logError);
+      }
+    }
 
     return new Response(
       JSON.stringify({ success: true, message: 'Email sent successfully' }),
@@ -710,6 +800,32 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in send-email function:', error);
+
+    // Log failure to database
+    if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+      try {
+        const { emailType, to } = await req.clone().json();
+        await fetch(`${SUPABASE_URL}/rest/v1/email_logs`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({
+            template_key: emailType || 'unknown',
+            recipient: to || 'unknown',
+            subject: 'Failed to send',
+            status: 'failed',
+            error_message: error.message,
+          }),
+        });
+      } catch (logError) {
+        console.error('Failed to log error:', logError);
+      }
+    }
+
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
