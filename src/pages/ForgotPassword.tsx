@@ -47,9 +47,16 @@ const ForgotPassword = () => {
 
       if (error) {
         console.error('Password reset error:', error);
+        
+        // Check if it's an SMTP configuration error
+        const isSmtpError = error.message?.includes('Error sending recovery email') || 
+                           error.status === 500;
+        
         toast({
           title: "Reset Failed",
-          description: error.message || "Failed to send reset email. Please try again.",
+          description: isSmtpError 
+            ? "Email service is not configured. Please contact the administrator or try again later."
+            : error.message || "Failed to send reset email. Please try again.",
           variant: "destructive",
         });
       } else {
@@ -76,9 +83,14 @@ const ForgotPassword = () => {
     const { error } = await resetPassword(email);
     
     if (error) {
+      const isSmtpError = error.message?.includes('Error sending recovery email') || 
+                         error.status === 500;
+      
       toast({
         title: "Resend Failed",
-        description: error.message || "Failed to resend reset email.",
+        description: isSmtpError 
+          ? "Email service is not configured. Please contact the administrator."
+          : error.message || "Failed to resend reset email.",
         variant: "destructive",
       });
     } else {
