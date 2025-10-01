@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { FileUpload } from '@/components/ui/file-upload';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Navigation from '@/components/Navigation';
+import { resolveArtworkImages } from '@/lib/artwork-images';
 
 interface Order {
   id: string;
@@ -314,11 +315,15 @@ export default function Payment() {
                   <CardContent className="space-y-6">
                     {/* Order Items */}
                     <div className="space-y-4">
-                      {order.order_items.map((item) => (
+                      {order.order_items.map((item) => {
+                        const resolvedImages = resolveArtworkImages(item.artwork_image_url ? [item.artwork_image_url] : null);
+                        const imageUrl = resolvedImages[0];
+                        
+                        return (
                         <div key={item.id} className="flex gap-4">
                           <div className="w-16 h-16 bg-muted rounded-md overflow-hidden">
                             <img
-                              src={item.artwork_image_url || '/placeholder.svg'}
+                              src={imageUrl}
                               alt={item.artwork_title}
                               className="w-full h-full object-cover"
                             />
@@ -336,7 +341,8 @@ export default function Payment() {
                             </div>
                           </div>
                         </div>
-                      ))}
+                      );
+                      })}
                     </div>
 
                     <Separator />
