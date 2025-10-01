@@ -83,7 +83,7 @@ const ArtworkCard = ({
             alt={title}
             loading="lazy"
             decoding="async"
-            className="w-full h-32 sm:h-40 object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-48 sm:h-56 object-cover transition-transform duration-700 group-hover:scale-110"
             onLoad={(e) => {
               e.currentTarget.classList.add('loaded');
             }}
@@ -92,32 +92,32 @@ const ArtworkCard = ({
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-            <div className="absolute bottom-1 left-1 right-1 flex gap-0.5 sm:bottom-2 sm:left-2 sm:right-2 sm:gap-1">
+            <div className="absolute bottom-2 left-2 right-2 flex gap-1 sm:gap-1">
               <Button
                 size="sm"
-                className="flex-1 font-handwritten border border-zinc-900 dark:border-white bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700 h-4 px-0.5 text-[9px] sm:h-6 sm:px-2 sm:text-xs min-w-0"
+                className="flex-1 font-handwritten border border-zinc-900 dark:border-white bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-white dark:hover:bg-zinc-700 h-8 px-2 text-xs sm:h-6 sm:px-3"
                 onClick={(e) => {
                   e.stopPropagation();
                   onView(id);
                 }}
               >
-                <Eye className="w-2 h-2 sm:w-3 sm:h-3" />
+                <Eye className="w-3 h-3 sm:w-3 sm:h-3" />
               </Button>
               {price && (
                 <>
                   <Button
                     size="sm"
-                    className="font-handwritten border border-zinc-900 dark:border-white bg-green-500 text-white hover:bg-green-600 h-4 px-0.5 sm:h-6 sm:px-2 min-w-0"
+                    className="flex-1 font-handwritten border border-zinc-900 dark:border-white bg-green-500 text-white hover:bg-green-600 h-8 px-2 text-xs sm:h-6 sm:px-3"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart();
                     }}
                   >
-                    <Plus className="w-2 h-2 sm:w-3 sm:h-3" />
+                    <Plus className="w-3 h-3 sm:w-3 sm:h-3" />
                   </Button>
                   <Button
                     size="sm"
-                    className="font-handwritten border border-zinc-900 dark:border-white bg-amber-400 text-zinc-900 hover:bg-amber-300 h-4 px-0.5 sm:h-6 sm:px-2 min-w-0"
+                    className="flex-1 font-handwritten border border-zinc-900 dark:border-white bg-amber-400 text-zinc-900 hover:bg-amber-300 h-8 px-2 text-xs sm:h-6 sm:px-3"
                     onClick={(e) => {
                       e.stopPropagation();
                       if (price) onPurchase({
@@ -129,7 +129,7 @@ const ArtworkCard = ({
                       });
                     }}
                   >
-                    <ShoppingCart className="w-2 h-2 sm:w-3 sm:h-3" />
+                    <ShoppingCart className="w-3 h-3 sm:w-3 sm:h-3" />
                   </Button>
                 </>
               )}
